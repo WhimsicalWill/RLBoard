@@ -1,29 +1,15 @@
 import gym
 import numpy as np
 from agent_class import Agent
+from wrappers import SimSave
 from utils import plot_learning_curve
 
 def should_save_checkpoint():
 	return np.random.random() < .01
 
-def save_env_state(sim_state, checkpoint):
-	print("saving simulator state")
-	filename = f"data/state_data_{checkpoint}.pkl"
-	with open(filename, 'wb') as file:
-		pickle.dump(sim_state, file, pickle.HIGHEST_PROTOCOL)
-
-def load_env_state():
-	print("loading best")
-	with open('data/state_data.pkl', 'rb') as file:
-		state_data = pickle.load(file)
-		print(state_data)
-
-
-
-
-
 if __name__ == '__main__':
 	env = gym.make('HalfCheetah-v3')
+	env = SimSave(env, "data")
 	agent = Agent(alpha=0.0003, beta=0.0003, reward_scale=2, 
 					input_dims=env.observation_space.shape,
 					tau=0.005, batch_size=256, fc1_dims=256, fc2_dims=256, 
@@ -53,8 +39,8 @@ if __name__ == '__main__':
 			observation_, reward, done, info = env.step(action)
 			agent.store_transition(observation, action, reward, observation_, done)
 			if should_save_checkpoint() and checkpoints < num_checkpoints:
+				env.save_state(checkpoints, observation) # save state and current obs
 				checkpoints += 1
-				save_env_state(env.sim.get_state(), checkpoint)
 			if not load_checkpoint: # don't learn when viewing agent checkpoint
 				agent.learn()
 			score += reward

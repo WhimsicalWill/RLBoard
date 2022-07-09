@@ -1,21 +1,23 @@
 import gym
 import numpy as np
-from agent_class import Agent
+from wrappers import SimSave
 
 if __name__ == '__main__':
-    env = gym.make('HalfCheetah-v3')
-	agent = Agent(alpha=0.0003, beta=0.0003, reward_scale=2, 
-					input_dims=env.observation_space.shape,
-					tau=0.005, batch_size=256, fc1_dims=256, fc2_dims=256, 
-					env=env, action_dim=env.action_space.shape[0])
-	n_games = 250
-	filename = f'InvertedPendulum_scale_{agent.scale}_{n_games}_games'
-	figure_file = f'plots/{filename}.png'
+	env_name = 'HalfCheetah-v3'
+	filename = 'data/state_data'
+	env = gym.make(env_name)
+	env = SimSave(env, filename)
 
-	best_score = env.reward_range[0] # init to smallest possible reward
-	score_history = []
-	load_checkpoint = False
-
-	if load_checkpoint:
-		agent.load_models()
-		env.render(mode='human')
+	n_checkpoints = 10
+	for checkpoint in range(n_checkpoints):
+		env.reset() # TODO: not sure if this is needed; could embed within load_state as well
+		env.load_state(checkpoint)
+		done = False
+		score, steps = 0, 0
+		while not done:
+			action = env.action_space.sample()
+			observation_, reward, done, info = env.step(action)
+			env.render()
+			score += reward
+			steps += 1
+		print(f"Checkpoint {checkpoint}, score: {score}, steps: {steps}")
