@@ -13,7 +13,7 @@ if __name__ == '__main__':
  
 	n_games = 100
 	num_checkpoints = 10
-	checkpoints = 0	
+	checkpoint = 0	
  
 	for i in range(n_games):
 		observation = env.reset()
@@ -22,9 +22,9 @@ if __name__ == '__main__':
 		while not done:
 			action = env.action_space.sample()
 			observation_, reward, done, info = env.step(action)
-			if should_save_checkpoint() and checkpoints < num_checkpoints:
-				env.save_state(checkpoints) # TODO: save state and current obs
-				checkpoints += 1
+			if should_save_checkpoint() and checkpoint < num_checkpoints:
+				env.save_state(observation_, checkpoint) # TODO: save state and current obs
+				checkpoint += 1
 			score += reward
 			steps += 1
 		
