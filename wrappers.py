@@ -22,7 +22,7 @@ class SimSave(gym.Wrapper):
 
 	# loads the simulator with a saved state and return current observation
 	def load_state(self, checkpoint_num):
-		print("loading best")
+		print("loading simulator state")
 		self.env.reset()
 		filename = f"{self.filename}_{checkpoint_num}.pkl"
 		with open(filename, 'rb') as file:
