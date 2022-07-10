@@ -15,11 +15,10 @@ if __name__ == '__main__':
 
     best_score = env.reward_range[0] # init to smallest possible reward
     score_history = []
-    load_checkpoint = False
+    load_checkpoint = True
 
     if load_checkpoint:
         agent.load_models()
-        env.render(mode='human')
     
     steps = 0 # for debug
     for i in range(n_games):
@@ -30,8 +29,7 @@ if __name__ == '__main__':
             action = agent.choose_action(observation)
             observation_, reward, done, info = env.step(action)
             agent.store_transition(observation, action, reward, observation_, done)
-            if not load_checkpoint: # don't learn when viewing agent checkpoint
-                agent.learn()
+            agent.learn()
             score += reward
             steps += 1
             observation = observation_
@@ -40,11 +38,9 @@ if __name__ == '__main__':
 
         if avg_score > best_score:
             best_score = avg_score
-            if not load_checkpoint:
-                agent.save_models()
+            agent.save_models()
         
         print(f"Episode {i}, score: {score}, avg_score: {avg_score}")
 
-    if not load_checkpoint:
-        x = [i+1 for i in range(n_games)]
-        plot_learning_curve(x, score_history, figure_file)
+    x = [i+1 for i in range(n_games)]
+    plot_learning_curve(x, score_history, figure_file)
