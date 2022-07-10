@@ -1,6 +1,6 @@
 import gym
 import numpy as np
-from wrappers import SimSave
+from wrappers import EnvSave
 
 def should_save_checkpoint():
 	return np.random.random() < .001
@@ -9,7 +9,7 @@ if __name__ == '__main__':
 	env_name = 'HalfCheetah-v3'
 	filename = 'data/state_data'
 	env = gym.make(env_name)
-	env = SimSave(env, filename)
+	env = EnvSave(env, filename)
  
 	n_games = 100
 	num_checkpoints = 10

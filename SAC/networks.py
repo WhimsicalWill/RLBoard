@@ -3,6 +3,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 import torch.optim as optim
 import numpy as np
+import os
 
 class CriticNetwork(nn.Module):
     def __init__(self, beta, input_dims, fc1_dims, fc2_dims, action_dim, name,
@@ -15,7 +16,9 @@ class CriticNetwork(nn.Module):
         self.action_dim = action_dim
         self.name = name
         self.chkpt_dir = chkpt_dir
-        self.chkpt_file = f"{chkpt_dir}/{name}_sac"
+        
+        dirname = os.path.dirname(__file__) # get current path incase calling from parent file
+        self.chkpt_file = os.path.join(dirname, f'{chkpt_dir}/{name}_sac')
 
         self.fc1 = nn.Linear(input_dims[0] + action_dim, fc1_dims)
         self.fc2 = nn.Linear(fc1_dims, fc2_dims)
@@ -54,7 +57,9 @@ class ActorNetwork(nn.Module):
         self.action_dim = action_dim # this really should be 'action_dim' since it's not nec. discrete
         self.name = name
         self.chkpt_dir = chkpt_dir
-        self.chkpt_file = f"{chkpt_dir}/{name}_sac"
+        
+        dirname = os.path.dirname(__file__) # get current path incase calling from parent file
+        self.chkpt_file = os.path.join(dirname, f'{chkpt_dir}/{name}_sac')
         self.max_action = max_action
         self.reparam_noise = 1e-6
 
@@ -113,7 +118,9 @@ class ValueNetwork(nn.Module):
         self.fc2_dims = fc2_dims
         self.name = name
         self.chkpt_dir = chkpt_dir
-        self.chkpt_file = f"{chkpt_dir}/{name}_sac"
+        
+        dirname = os.path.dirname(__file__) # get current path incase calling from parent file
+        self.chkpt_file = os.path.join(dirname, f'{chkpt_dir}/{name}_sac')
 
         self.fc1 = nn.Linear(*input_dims, fc1_dims)
         self.fc2 = nn.Linear(fc1_dims, fc2_dims)

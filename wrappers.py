@@ -21,19 +21,20 @@ class EnvSave(gym.Wrapper):
 		print("saving env state")
 		filename = f"{self.filename}_{checkpoint_num}.pkl"
 
-		sim_data = self.env.sim.get_state()
-		env_state = EnvState(sim_data, obs_)
+		sim_state = self.env.sim.get_state()
+		env_state = EnvState(sim_state, obs_)
 		with open(filename, 'wb') as file:
 			pickle.dump(env_state, file, pickle.HIGHEST_PROTOCOL)
 
 	# loads the env with a saved state and return current observation
 	def load_state(self, checkpoint_num):
 		print("loading env state")
+		self.env.reset() # reset needed since step count needs to be reset
 		filename = f"{self.filename}_{checkpoint_num}.pkl"
 
 		with open(filename, 'rb') as file:
 			env_state = pickle.load(file)
-			self.env.sim.set_state(env_state.env_state)
+			self.env.sim.set_state(env_state.sim_state)
 			return env_state.first_obs
 
 	def load_states(self, dir):
@@ -48,5 +49,18 @@ class EnvSave(gym.Wrapper):
 # The amount of data in a sim state may differ by env.
 # This file should also include a rudimentary class for a Sim State, which includes
 # a priority score, the sim data, and the first observation.
+
+
+# SO FAR:
+# 1) I have made the render test (from a saved SAC checkpoint) work as expected
+# 2) I have made the rendered gifs of the EnvState objects for a random policy
+# TODO: render gifs of trained SAC policy on the EnvState objects
+
+
+
+
+# TODO2:
+# Configure the state objects to properly save relevant info
+#
 #
 #

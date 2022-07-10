@@ -1,7 +1,6 @@
 import gym
 import numpy as np
 from agent_class import Agent
-from utils import plot_learning_curve
 from imageio import imread, mimsave
 
 def save_vid(frames, ep_num):

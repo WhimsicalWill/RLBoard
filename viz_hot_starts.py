@@ -1,6 +1,6 @@
 import gym
 import numpy as np
-from wrappers import SimSave
+from wrappers import EnvSave
 from imageio import imread, mimsave
 
 def save_vid(frames, checkpoint):
@@ -11,7 +11,7 @@ if __name__ == '__main__':
 	env_name = 'HalfCheetah-v3'
 	filename = 'data/state_data'
 	env = gym.make(env_name)
-	env = SimSave(env, filename)
+	env = EnvSave(env, filename)
 
 	max_steps = 100
 	n_checkpoints = 10
