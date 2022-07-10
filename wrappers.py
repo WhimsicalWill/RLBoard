@@ -2,6 +2,8 @@ import gym
 import numpy as np
 import pickle
 import os
+from imageio import mimsave
+
 
 class EnvState():
 	def __init__(self, sim_state, first_obs, priority=0):
@@ -9,58 +11,81 @@ class EnvState():
 		self.first_obs = first_obs
 		self.priority = priority
 
-class EnvSave(gym.Wrapper):
-	def __init__(self, env, filename):
-		super(EnvSave, self).__init__(env)
-		self.filename = filename
+class HotStarts(gym.Wrapper):
+	def __init__(self, env, save_dir, max_size=10): # TODO: change to save_dir
+		super(HotStarts, self).__init__(env)
 		self.env = env
+		self.state_dir = f"{save_dir}/states"
+		self.viz_dir = f"{save_dir}/viz"
+		self.max_size = max_size
 		self.hot_starts = [] # to be populated by user with starting env states
+  
+		self.visualizer = Visualizer(self.env, self.viz_dir)
 
-	# save the state of the env to a file 
-	def save_state(self, obs_, checkpoint_num):
-		print("saving env state")
-		filename = f"{self.filename}_{checkpoint_num}.pkl"
-
+	def track_state(self, obs_):
+		if len(self.hot_starts) >= self.max_size:
+			return # TODO: prioritize by priority
 		sim_state = self.env.sim.get_state()
 		env_state = EnvState(sim_state, obs_)
-		with open(filename, 'wb') as file:
-			pickle.dump(env_state, file, pickle.HIGHEST_PROTOCOL)
+		self.hot_starts.append(env_state)
 
-	# loads the env with a saved state and return current observation
-	def load_state(self, checkpoint_num):
-		print("loading env state")
-		self.env.reset() # reset needed since step count needs to be reset
-		filename = f"{self.filename}_{checkpoint_num}.pkl"
-
-		with open(filename, 'rb') as file:
-			env_state = pickle.load(file)
-			self.env.sim.set_state(env_state.sim_state)
-			return env_state.first_obs
-
-	def load_states(self, dir):
-		for filename in os.listdir(dir):
-			with open(filename, 'rb') as file:
+	def load_states(self):
+		for filename in os.listdir(self.state_dir):
+			with open(f"{self.state_dir}/{filename}", 'rb') as file:
 				env_state = pickle.load(file)
 				self.hot_starts.append(env_state)
+	
+	def save_states(self):
+		for i, env_state in enumerate(self.hot_starts):
+			filename = f"{self.state_dir}/hot_start_data_{i}"
+			with open(filename, 'wb') as file:
+				pickle.dump(env_state, file, pickle.HIGHEST_PROTOCOL)
 
-# Right now we save and load sim states to the disk
-# TODO: This env should track a PQ of sim states and have them actively in memory
-# with some maximum buffer size. 
-# The amount of data in a sim state may differ by env.
-# This file should also include a rudimentary class for a Sim State, which includes
-# a priority score, the sim data, and the first observation.
+	def get_lowest_priority(self):
+		pass
 
-
-# SO FAR:
-# 1) I have made the render test (from a saved SAC checkpoint) work as expected
-# 2) I have made the rendered gifs of the EnvState objects for a random policy
-# TODO: render gifs of trained SAC policy on the EnvState objects
-
-
-
+	# agent_policy is the agent's mapping from observations to actions
+	def visualize_hot_starts(self, agent_policy):
+		for i, hot_start in enumerate(self.hot_starts):
+			self.env.reset() # reset needed since step count needs to be reset
+			self.env.sim.set_state(hot_start.sim_state)
+			first_obs = hot_start.first_obs
+			self.visualizer.env_runner(first_obs, agent_policy, i)
+   
+class Visualizer():
+	# TODO: put config details in config.json for easy user editing
+	def __init__(self, env, viz_dir, max_steps=500, px=256):
+		self.env = env
+		self.viz_dir = viz_dir
+		self.max_steps = max_steps
+		self.px = px
+		
+	def env_runner(self, first_obs, agent_policy, save_name):
+		obs = first_obs
+		done = False
+		score, steps = 0, 0
+		frames = []
+		while not done and steps < self.max_steps:
+			action = agent_policy(obs) # this call may vary by implementation
+			obs_, reward, done, info = self.env.step(action)
+			render_img = self.env.render(
+				mode="rgb_array",
+				width=self.px,
+				height=self.px,
+			)
+			frames.append(render_img)
+			score += reward
+			steps += 1
+			obs = obs_
+		print(f"Checkpoint {save_name}, score: {score}, steps: {steps}")
+		self.save_vid(frames, save_name)
+	
+	def save_vid(self, frames, save_name):
+		print(f"Saving gif {save_name} to {self.viz_dir}")
+		mimsave(f"{self.viz_dir}/hot_start_{save_name}.gif", frames)
 
 # TODO2:
-# Configure the state objects to properly save relevant info
-#
-#
+# In the future, we could have env states saved in a dictionary, to make deleting by key easy
+# Transition the functionality towards in memory, and saving/loading whole directories
+# 
 #

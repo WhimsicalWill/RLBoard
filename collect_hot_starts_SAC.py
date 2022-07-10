@@ -1,7 +1,7 @@
 import gym
 import numpy as np
 from agent_class import Agent
-from wrappers import SimSave
+from wrappers import HotStarts
 from utils import plot_learning_curve
 
 def should_save_checkpoint():
@@ -9,7 +9,7 @@ def should_save_checkpoint():
 
 if __name__ == '__main__':
 	env = gym.make('HalfCheetah-v3')
-	env = SimSave(env, "data")
+	env = HotStarts(env, "data")
 	agent = Agent(alpha=0.0003, beta=0.0003, reward_scale=2, 
 					input_dims=env.observation_space.shape,
 					tau=0.005, batch_size=256, fc1_dims=256, fc2_dims=256, 
@@ -39,7 +39,7 @@ if __name__ == '__main__':
 			observation_, reward, done, info = env.step(action)
 			agent.store_transition(observation, action, reward, observation_, done)
 			if should_save_checkpoint() and checkpoints < num_checkpoints:
-				env.save_state(checkpoints, observation) # save state and current obs
+				# env.save_state(checkpoints, observation) # save state and current obs
 				checkpoints += 1
 			if not load_checkpoint: # don't learn when viewing agent checkpoint
 				agent.learn()
