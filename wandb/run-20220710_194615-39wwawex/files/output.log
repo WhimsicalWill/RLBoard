@@ -1,0 +1,22 @@
+/home/will/anaconda3/envs/mujoco/lib/python3.7/site-packages/gym/logger.py:30: UserWarning: [33mWARN: Box bound precision lowered by casting to float32
+  warnings.warn(colorize('%s: %s'%('WARN', msg % args), 'yellow'))
+... loading models ...
+Checkpoint 0, score: 562.5064877692822, step: 500
+Saving gif 0 to data/viz
+Checkpoint 1, score: 581.7662352957011, step: 500
+Saving gif 1 to data/viz
+Checkpoint 2, score: 566.681594867108, step: 500
+Saving gif 2 to data/viz
+Checkpoint 3, score: 662.7190077527846, step: 500
+Saving gif 3 to data/viz
+Checkpoint 4, score: 493.5326483758692, step: 500
+Saving gif 4 to data/viz
+Checkpoint 5, score: 682.431864343808, step: 500
+Saving gif 5 to data/viz
+Checkpoint 6, score: 575.7545352487452, step: 500
+Saving gif 6 to data/viz
+Checkpoint 7, score: 592.9908497871771, step: 500
+Saving gif 7 to data/viz
+Checkpoint 8, score: -107.16295667459876, step: 500
+Saving gif 8 to data/viz
+Saving gif collage to data/viz

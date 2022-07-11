@@ -1,0 +1,14 @@
+/home/will/anaconda3/envs/mujoco/lib/python3.7/site-packages/gym/logger.py:30: UserWarning: [33mWARN: Box bound precision lowered by casting to float32
+  warnings.warn(colorize('%s: %s'%('WARN', msg % args), 'yellow'))
+... loading models ...
+(64, 64, 3)
+Traceback (most recent call last):
+  File "viz_hot_starts_SAC.py", line 24, in <module>
+    env.visualize_hot_starts(agent.choose_action)
+  File "/home/will/projects/RL/RLBoard/wrappers.py", line 55, in visualize_hot_starts
+    self.visualizer.env_runner(first_obs, agent_policy, i)
+  File "/home/will/projects/RL/RLBoard/wrappers.py", line 88, in env_runner
+    self.add_to_gif_collage(render_img, step, hot_start_num)
+  File "/home/will/projects/RL/RLBoard/wrappers.py", line 105, in add_to_gif_collage
+    self.frame_collage[step, :, grid_y_start:grid_y_start+self.px, grid_x_start:grid_x_start+self.px] = img
+ValueError: could not broadcast input array from shape (64,64,3) into shape (3,64,64)

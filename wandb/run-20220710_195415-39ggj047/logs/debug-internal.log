@@ -1,0 +1,238 @@
+2022-07-10 19:54:16,178 INFO    MainThread:27741 [internal.py:wandb_internal():93] W&B internal server running at pid: 27741, started at: 2022-07-10 19:54:16.178080
+2022-07-10 19:54:16,181 INFO    WriterThread:27741 [datastore.py:open_for_write():75] open: /home/will/projects/RL/RLBoard/wandb/run-20220710_195415-39ggj047/run-39ggj047.wandb
+2022-07-10 19:54:16,182 DEBUG   SenderThread:27741 [sender.py:send():236] send: header
+2022-07-10 19:54:16,182 DEBUG   SenderThread:27741 [sender.py:send():236] send: run
+2022-07-10 19:54:16,412 DEBUG   HandlerThread:27741 [handler.py:handle_request():140] handle_request: check_version
+2022-07-10 19:54:16,414 INFO    SenderThread:27741 [dir_watcher.py:__init__():216] watching files in: /home/will/projects/RL/RLBoard/wandb/run-20220710_195415-39ggj047/files
+2022-07-10 19:54:16,414 INFO    SenderThread:27741 [sender.py:_start_run_threads():818] run started: 39ggj047 with start time 1657497255
+2022-07-10 19:54:16,414 DEBUG   SenderThread:27741 [sender.py:send():236] send: summary
+2022-07-10 19:54:16,415 INFO    SenderThread:27741 [sender.py:_save_file():952] saving file wandb-summary.json with policy end
+2022-07-10 19:54:16,415 DEBUG   SenderThread:27741 [sender.py:send_request():250] send_request: check_version
+2022-07-10 19:54:16,511 DEBUG   HandlerThread:27741 [handler.py:handle_request():140] handle_request: run_start
+2022-07-10 19:54:16,553 DEBUG   HandlerThread:27741 [meta.py:__init__():35] meta init
+2022-07-10 19:54:16,553 DEBUG   HandlerThread:27741 [meta.py:__init__():49] meta init done
+2022-07-10 19:54:16,553 DEBUG   HandlerThread:27741 [meta.py:probe():209] probe
+2022-07-10 19:54:16,564 DEBUG   HandlerThread:27741 [meta.py:_setup_git():199] setup git
+2022-07-10 19:54:16,574 DEBUG   HandlerThread:27741 [meta.py:_setup_git():206] setup git done
+2022-07-10 19:54:16,574 DEBUG   HandlerThread:27741 [meta.py:_save_pip():53] save pip
+2022-07-10 19:54:16,575 DEBUG   HandlerThread:27741 [meta.py:_save_pip():67] save pip done
+2022-07-10 19:54:16,575 DEBUG   HandlerThread:27741 [meta.py:_save_conda():74] save conda
+2022-07-10 19:54:17,416 INFO    Thread-7  :27741 [dir_watcher.py:_on_file_created():269] file/dir created: /home/will/projects/RL/RLBoard/wandb/run-20220710_195415-39ggj047/files/conda-environment.yaml
+2022-07-10 19:54:17,416 INFO    Thread-7  :27741 [dir_watcher.py:_on_file_created():269] file/dir created: /home/will/projects/RL/RLBoard/wandb/run-20220710_195415-39ggj047/files/wandb-summary.json
+2022-07-10 19:54:17,416 INFO    Thread-7  :27741 [dir_watcher.py:_on_file_created():269] file/dir created: /home/will/projects/RL/RLBoard/wandb/run-20220710_195415-39ggj047/files/requirements.txt
+2022-07-10 19:54:19,193 DEBUG   HandlerThread:27741 [meta.py:_save_conda():84] save conda done
+2022-07-10 19:54:19,194 DEBUG   HandlerThread:27741 [meta.py:probe():247] probe done
+2022-07-10 19:54:19,215 DEBUG   SenderThread:27741 [sender.py:send():236] send: files
+2022-07-10 19:54:19,215 INFO    SenderThread:27741 [sender.py:_save_file():952] saving file wandb-metadata.json with policy now
+2022-07-10 19:54:19,220 DEBUG   HandlerThread:27741 [handler.py:handle_request():140] handle_request: stop_status
+2022-07-10 19:54:19,221 DEBUG   SenderThread:27741 [sender.py:send_request():250] send_request: stop_status
+2022-07-10 19:54:19,335 DEBUG   SenderThread:27741 [sender.py:send():236] send: telemetry
+2022-07-10 19:54:19,418 INFO    Thread-7  :27741 [dir_watcher.py:_on_file_modified():286] file/dir modified: /home/will/projects/RL/RLBoard/wandb/run-20220710_195415-39ggj047/files/conda-environment.yaml
+2022-07-10 19:54:19,418 INFO    Thread-7  :27741 [dir_watcher.py:_on_file_created():269] file/dir created: /home/will/projects/RL/RLBoard/wandb/run-20220710_195415-39ggj047/files/wandb-metadata.json
+2022-07-10 19:54:19,418 INFO    Thread-7  :27741 [dir_watcher.py:_on_file_created():269] file/dir created: /home/will/projects/RL/RLBoard/wandb/run-20220710_195415-39ggj047/files/output.log
+2022-07-10 19:54:19,685 INFO    Thread-11 :27741 [upload_job.py:push():138] Uploaded file /tmp/tmpyv4pdxh6wandb/2fpt82wq-wandb-metadata.json
+2022-07-10 19:54:21,419 INFO    Thread-7  :27741 [dir_watcher.py:_on_file_modified():286] file/dir modified: /home/will/projects/RL/RLBoard/wandb/run-20220710_195415-39ggj047/files/output.log
+2022-07-10 19:54:23,554 DEBUG   SenderThread:27741 [sender.py:send():236] send: telemetry
+2022-07-10 19:54:26,421 INFO    Thread-7  :27741 [dir_watcher.py:_on_file_modified():286] file/dir modified: /home/will/projects/RL/RLBoard/wandb/run-20220710_195415-39ggj047/files/output.log
+2022-07-10 19:54:28,422 INFO    Thread-7  :27741 [dir_watcher.py:_on_file_modified():286] file/dir modified: /home/will/projects/RL/RLBoard/wandb/run-20220710_195415-39ggj047/files/output.log
+2022-07-10 19:54:30,423 INFO    Thread-7  :27741 [dir_watcher.py:_on_file_modified():286] file/dir modified: /home/will/projects/RL/RLBoard/wandb/run-20220710_195415-39ggj047/files/output.log
+2022-07-10 19:54:32,424 INFO    Thread-7  :27741 [dir_watcher.py:_on_file_modified():286] file/dir modified: /home/will/projects/RL/RLBoard/wandb/run-20220710_195415-39ggj047/files/output.log
+2022-07-10 19:54:34,367 DEBUG   HandlerThread:27741 [handler.py:handle_request():140] handle_request: stop_status
+2022-07-10 19:54:34,367 DEBUG   SenderThread:27741 [sender.py:send_request():250] send_request: stop_status
+2022-07-10 19:54:34,426 INFO    Thread-7  :27741 [dir_watcher.py:_on_file_modified():286] file/dir modified: /home/will/projects/RL/RLBoard/wandb/run-20220710_195415-39ggj047/files/output.log
+2022-07-10 19:54:37,427 INFO    Thread-7  :27741 [dir_watcher.py:_on_file_modified():286] file/dir modified: /home/will/projects/RL/RLBoard/wandb/run-20220710_195415-39ggj047/files/output.log
+2022-07-10 19:54:39,428 INFO    Thread-7  :27741 [dir_watcher.py:_on_file_modified():286] file/dir modified: /home/will/projects/RL/RLBoard/wandb/run-20220710_195415-39ggj047/files/output.log
+2022-07-10 19:54:41,429 INFO    Thread-7  :27741 [dir_watcher.py:_on_file_modified():286] file/dir modified: /home/will/projects/RL/RLBoard/wandb/run-20220710_195415-39ggj047/files/output.log
+2022-07-10 19:54:43,429 INFO    Thread-7  :27741 [dir_watcher.py:_on_file_modified():286] file/dir modified: /home/will/projects/RL/RLBoard/wandb/run-20220710_195415-39ggj047/files/output.log
+2022-07-10 19:54:44,914 DEBUG   SenderThread:27741 [sender.py:send():236] send: stats
+2022-07-10 19:54:45,431 INFO    Thread-7  :27741 [dir_watcher.py:_on_file_modified():286] file/dir modified: /home/will/projects/RL/RLBoard/wandb/run-20220710_195415-39ggj047/files/output.log
+2022-07-10 19:54:47,431 INFO    Thread-7  :27741 [dir_watcher.py:_on_file_modified():286] file/dir modified: /home/will/projects/RL/RLBoard/wandb/run-20220710_195415-39ggj047/files/config.yaml
+2022-07-10 19:54:48,432 INFO    Thread-7  :27741 [dir_watcher.py:_on_file_modified():286] file/dir modified: /home/will/projects/RL/RLBoard/wandb/run-20220710_195415-39ggj047/files/output.log
+2022-07-10 19:54:49,492 DEBUG   HandlerThread:27741 [handler.py:handle_request():140] handle_request: stop_status
+2022-07-10 19:54:49,492 DEBUG   SenderThread:27741 [sender.py:send_request():250] send_request: stop_status
+2022-07-10 19:54:50,433 INFO    Thread-7  :27741 [dir_watcher.py:_on_file_modified():286] file/dir modified: /home/will/projects/RL/RLBoard/wandb/run-20220710_195415-39ggj047/files/output.log
+2022-07-10 19:54:52,433 INFO    Thread-7  :27741 [dir_watcher.py:_on_file_modified():286] file/dir modified: /home/will/projects/RL/RLBoard/wandb/run-20220710_195415-39ggj047/files/output.log
+2022-07-10 19:54:54,434 INFO    Thread-7  :27741 [dir_watcher.py:_on_file_modified():286] file/dir modified: /home/will/projects/RL/RLBoard/wandb/run-20220710_195415-39ggj047/files/output.log
+2022-07-10 19:54:57,435 INFO    Thread-7  :27741 [dir_watcher.py:_on_file_modified():286] file/dir modified: /home/will/projects/RL/RLBoard/wandb/run-20220710_195415-39ggj047/files/output.log
+2022-07-10 19:54:59,436 INFO    Thread-7  :27741 [dir_watcher.py:_on_file_modified():286] file/dir modified: /home/will/projects/RL/RLBoard/wandb/run-20220710_195415-39ggj047/files/output.log
+2022-07-10 19:55:01,437 INFO    Thread-7  :27741 [dir_watcher.py:_on_file_modified():286] file/dir modified: /home/will/projects/RL/RLBoard/wandb/run-20220710_195415-39ggj047/files/output.log
+2022-07-10 19:55:03,438 INFO    Thread-7  :27741 [dir_watcher.py:_on_file_modified():286] file/dir modified: /home/will/projects/RL/RLBoard/wandb/run-20220710_195415-39ggj047/files/output.log
+2022-07-10 19:55:04,623 DEBUG   HandlerThread:27741 [handler.py:handle_request():140] handle_request: stop_status
+2022-07-10 19:55:04,624 DEBUG   SenderThread:27741 [sender.py:send_request():250] send_request: stop_status
+2022-07-10 19:55:05,438 INFO    Thread-7  :27741 [dir_watcher.py:_on_file_modified():286] file/dir modified: /home/will/projects/RL/RLBoard/wandb/run-20220710_195415-39ggj047/files/output.log
+2022-07-10 19:55:08,440 INFO    Thread-7  :27741 [dir_watcher.py:_on_file_modified():286] file/dir modified: /home/will/projects/RL/RLBoard/wandb/run-20220710_195415-39ggj047/files/output.log
+2022-07-10 19:55:10,440 INFO    Thread-7  :27741 [dir_watcher.py:_on_file_modified():286] file/dir modified: /home/will/projects/RL/RLBoard/wandb/run-20220710_195415-39ggj047/files/output.log
+2022-07-10 19:55:12,441 INFO    Thread-7  :27741 [dir_watcher.py:_on_file_modified():286] file/dir modified: /home/will/projects/RL/RLBoard/wandb/run-20220710_195415-39ggj047/files/output.log
+2022-07-10 19:55:14,442 INFO    Thread-7  :27741 [dir_watcher.py:_on_file_modified():286] file/dir modified: /home/will/projects/RL/RLBoard/wandb/run-20220710_195415-39ggj047/files/output.log
+2022-07-10 19:55:15,114 DEBUG   SenderThread:27741 [sender.py:send():236] send: stats
+2022-07-10 19:55:16,443 INFO    Thread-7  :27741 [dir_watcher.py:_on_file_modified():286] file/dir modified: /home/will/projects/RL/RLBoard/wandb/run-20220710_195415-39ggj047/files/output.log
+2022-07-10 19:55:19,444 INFO    Thread-7  :27741 [dir_watcher.py:_on_file_modified():286] file/dir modified: /home/will/projects/RL/RLBoard/wandb/run-20220710_195415-39ggj047/files/output.log
+2022-07-10 19:55:19,759 DEBUG   HandlerThread:27741 [handler.py:handle_request():140] handle_request: stop_status
+2022-07-10 19:55:19,760 DEBUG   SenderThread:27741 [sender.py:send_request():250] send_request: stop_status
+2022-07-10 19:55:21,445 INFO    Thread-7  :27741 [dir_watcher.py:_on_file_modified():286] file/dir modified: /home/will/projects/RL/RLBoard/wandb/run-20220710_195415-39ggj047/files/output.log
+2022-07-10 19:55:23,446 INFO    Thread-7  :27741 [dir_watcher.py:_on_file_modified():286] file/dir modified: /home/will/projects/RL/RLBoard/wandb/run-20220710_195415-39ggj047/files/output.log
+2022-07-10 19:55:25,456 INFO    Thread-7  :27741 [dir_watcher.py:_on_file_modified():286] file/dir modified: /home/will/projects/RL/RLBoard/wandb/run-20220710_195415-39ggj047/files/output.log
+2022-07-10 19:55:28,456 INFO    Thread-7  :27741 [dir_watcher.py:_on_file_modified():286] file/dir modified: /home/will/projects/RL/RLBoard/wandb/run-20220710_195415-39ggj047/files/output.log
+2022-07-10 19:55:32,458 INFO    Thread-7  :27741 [dir_watcher.py:_on_file_modified():286] file/dir modified: /home/will/projects/RL/RLBoard/wandb/run-20220710_195415-39ggj047/files/output.log
+2022-07-10 19:55:34,458 INFO    Thread-7  :27741 [dir_watcher.py:_on_file_modified():286] file/dir modified: /home/will/projects/RL/RLBoard/wandb/run-20220710_195415-39ggj047/files/output.log
+2022-07-10 19:55:34,877 DEBUG   HandlerThread:27741 [handler.py:handle_request():140] handle_request: stop_status
+2022-07-10 19:55:34,877 DEBUG   SenderThread:27741 [sender.py:send_request():250] send_request: stop_status
+2022-07-10 19:55:37,460 INFO    Thread-7  :27741 [dir_watcher.py:_on_file_modified():286] file/dir modified: /home/will/projects/RL/RLBoard/wandb/run-20220710_195415-39ggj047/files/output.log
+2022-07-10 19:55:39,461 INFO    Thread-7  :27741 [dir_watcher.py:_on_file_modified():286] file/dir modified: /home/will/projects/RL/RLBoard/wandb/run-20220710_195415-39ggj047/files/output.log
+2022-07-10 19:55:41,462 INFO    Thread-7  :27741 [dir_watcher.py:_on_file_modified():286] file/dir modified: /home/will/projects/RL/RLBoard/wandb/run-20220710_195415-39ggj047/files/output.log
+2022-07-10 19:55:44,464 INFO    Thread-7  :27741 [dir_watcher.py:_on_file_modified():286] file/dir modified: /home/will/projects/RL/RLBoard/wandb/run-20220710_195415-39ggj047/files/output.log
+2022-07-10 19:55:45,313 DEBUG   SenderThread:27741 [sender.py:send():236] send: stats
+2022-07-10 19:55:46,464 INFO    Thread-7  :27741 [dir_watcher.py:_on_file_modified():286] file/dir modified: /home/will/projects/RL/RLBoard/wandb/run-20220710_195415-39ggj047/files/output.log
+2022-07-10 19:55:48,465 INFO    Thread-7  :27741 [dir_watcher.py:_on_file_modified():286] file/dir modified: /home/will/projects/RL/RLBoard/wandb/run-20220710_195415-39ggj047/files/output.log
+2022-07-10 19:55:50,008 DEBUG   HandlerThread:27741 [handler.py:handle_request():140] handle_request: stop_status
+2022-07-10 19:55:50,009 DEBUG   SenderThread:27741 [sender.py:send_request():250] send_request: stop_status
+2022-07-10 19:55:51,468 INFO    Thread-7  :27741 [dir_watcher.py:_on_file_modified():286] file/dir modified: /home/will/projects/RL/RLBoard/wandb/run-20220710_195415-39ggj047/files/output.log
+2022-07-10 19:55:53,468 INFO    Thread-7  :27741 [dir_watcher.py:_on_file_modified():286] file/dir modified: /home/will/projects/RL/RLBoard/wandb/run-20220710_195415-39ggj047/files/output.log
+2022-07-10 19:55:55,468 INFO    Thread-7  :27741 [dir_watcher.py:_on_file_modified():286] file/dir modified: /home/will/projects/RL/RLBoard/wandb/run-20220710_195415-39ggj047/files/output.log
+2022-07-10 19:55:57,470 INFO    Thread-7  :27741 [dir_watcher.py:_on_file_modified():286] file/dir modified: /home/will/projects/RL/RLBoard/wandb/run-20220710_195415-39ggj047/files/output.log
+2022-07-10 19:56:00,471 INFO    Thread-7  :27741 [dir_watcher.py:_on_file_modified():286] file/dir modified: /home/will/projects/RL/RLBoard/wandb/run-20220710_195415-39ggj047/files/output.log
+2022-07-10 19:56:02,476 INFO    Thread-7  :27741 [dir_watcher.py:_on_file_modified():286] file/dir modified: /home/will/projects/RL/RLBoard/wandb/run-20220710_195415-39ggj047/files/output.log
+2022-07-10 19:56:04,477 INFO    Thread-7  :27741 [dir_watcher.py:_on_file_modified():286] file/dir modified: /home/will/projects/RL/RLBoard/wandb/run-20220710_195415-39ggj047/files/output.log
+2022-07-10 19:56:05,241 DEBUG   HandlerThread:27741 [handler.py:handle_request():140] handle_request: stop_status
+2022-07-10 19:56:05,241 DEBUG   SenderThread:27741 [sender.py:send_request():250] send_request: stop_status
+2022-07-10 19:56:06,478 INFO    Thread-7  :27741 [dir_watcher.py:_on_file_modified():286] file/dir modified: /home/will/projects/RL/RLBoard/wandb/run-20220710_195415-39ggj047/files/output.log
+2022-07-10 19:56:09,479 INFO    Thread-7  :27741 [dir_watcher.py:_on_file_modified():286] file/dir modified: /home/will/projects/RL/RLBoard/wandb/run-20220710_195415-39ggj047/files/output.log
+2022-07-10 19:56:11,480 INFO    Thread-7  :27741 [dir_watcher.py:_on_file_modified():286] file/dir modified: /home/will/projects/RL/RLBoard/wandb/run-20220710_195415-39ggj047/files/output.log
+2022-07-10 19:56:13,481 INFO    Thread-7  :27741 [dir_watcher.py:_on_file_modified():286] file/dir modified: /home/will/projects/RL/RLBoard/wandb/run-20220710_195415-39ggj047/files/output.log
+2022-07-10 19:56:15,481 INFO    Thread-7  :27741 [dir_watcher.py:_on_file_modified():286] file/dir modified: /home/will/projects/RL/RLBoard/wandb/run-20220710_195415-39ggj047/files/output.log
+2022-07-10 19:56:15,507 DEBUG   SenderThread:27741 [sender.py:send():236] send: stats
+2022-07-10 19:56:18,483 INFO    Thread-7  :27741 [dir_watcher.py:_on_file_modified():286] file/dir modified: /home/will/projects/RL/RLBoard/wandb/run-20220710_195415-39ggj047/files/output.log
+2022-07-10 19:56:20,483 INFO    Thread-7  :27741 [dir_watcher.py:_on_file_modified():286] file/dir modified: /home/will/projects/RL/RLBoard/wandb/run-20220710_195415-39ggj047/files/output.log
+2022-07-10 19:56:20,677 DEBUG   HandlerThread:27741 [handler.py:handle_request():140] handle_request: stop_status
+2022-07-10 19:56:20,677 DEBUG   SenderThread:27741 [sender.py:send_request():250] send_request: stop_status
+2022-07-10 19:56:22,484 INFO    Thread-7  :27741 [dir_watcher.py:_on_file_modified():286] file/dir modified: /home/will/projects/RL/RLBoard/wandb/run-20220710_195415-39ggj047/files/output.log
+2022-07-10 19:56:24,485 INFO    Thread-7  :27741 [dir_watcher.py:_on_file_modified():286] file/dir modified: /home/will/projects/RL/RLBoard/wandb/run-20220710_195415-39ggj047/files/output.log
+2022-07-10 19:56:26,486 INFO    Thread-7  :27741 [dir_watcher.py:_on_file_modified():286] file/dir modified: /home/will/projects/RL/RLBoard/wandb/run-20220710_195415-39ggj047/files/output.log
+2022-07-10 19:56:28,487 INFO    Thread-7  :27741 [dir_watcher.py:_on_file_modified():286] file/dir modified: /home/will/projects/RL/RLBoard/wandb/run-20220710_195415-39ggj047/files/output.log
+2022-07-10 19:56:30,488 INFO    Thread-7  :27741 [dir_watcher.py:_on_file_modified():286] file/dir modified: /home/will/projects/RL/RLBoard/wandb/run-20220710_195415-39ggj047/files/output.log
+2022-07-10 19:56:32,488 INFO    Thread-7  :27741 [dir_watcher.py:_on_file_modified():286] file/dir modified: /home/will/projects/RL/RLBoard/wandb/run-20220710_195415-39ggj047/files/output.log
+2022-07-10 19:56:33,923 DEBUG   SenderThread:27741 [sender.py:send():236] send: telemetry
+2022-07-10 19:56:34,490 INFO    Thread-7  :27741 [dir_watcher.py:_on_file_modified():286] file/dir modified: /home/will/projects/RL/RLBoard/wandb/run-20220710_195415-39ggj047/files/output.log
+2022-07-10 19:56:35,491 INFO    Thread-7  :27741 [dir_watcher.py:_on_file_modified():286] file/dir modified: /home/will/projects/RL/RLBoard/wandb/run-20220710_195415-39ggj047/files/output.log
+2022-07-10 19:56:36,492 INFO    Thread-7  :27741 [dir_watcher.py:_on_file_modified():286] file/dir modified: /home/will/projects/RL/RLBoard/wandb/run-20220710_195415-39ggj047/files/output.log
+2022-07-10 19:56:36,522 DEBUG   HandlerThread:27741 [handler.py:handle_request():140] handle_request: poll_exit
+2022-07-10 19:56:36,523 DEBUG   SenderThread:27741 [sender.py:send():236] send: exit
+2022-07-10 19:56:36,523 INFO    SenderThread:27741 [sender.py:send_exit():372] handling exit code: 0
+2022-07-10 19:56:36,524 INFO    SenderThread:27741 [sender.py:send_exit():374] handling runtime: 140
+2022-07-10 19:56:36,525 INFO    SenderThread:27741 [sender.py:_save_file():952] saving file wandb-summary.json with policy end
+2022-07-10 19:56:36,525 INFO    SenderThread:27741 [sender.py:send_exit():380] send defer
+2022-07-10 19:56:36,526 DEBUG   SenderThread:27741 [sender.py:send_request():250] send_request: poll_exit
+2022-07-10 19:56:36,528 DEBUG   HandlerThread:27741 [handler.py:handle_request():140] handle_request: defer
+2022-07-10 19:56:36,528 INFO    HandlerThread:27741 [handler.py:handle_request_defer():163] handle defer: 0
+2022-07-10 19:56:36,529 DEBUG   SenderThread:27741 [sender.py:send_request():250] send_request: defer
+2022-07-10 19:56:36,530 INFO    SenderThread:27741 [sender.py:send_request_defer():389] handle sender defer: 0
+2022-07-10 19:56:36,530 INFO    SenderThread:27741 [sender.py:transition_state():393] send defer: 1
+2022-07-10 19:56:36,531 DEBUG   HandlerThread:27741 [handler.py:handle_request():140] handle_request: defer
+2022-07-10 19:56:36,531 INFO    HandlerThread:27741 [handler.py:handle_request_defer():163] handle defer: 1
+2022-07-10 19:56:36,568 DEBUG   SenderThread:27741 [sender.py:send_request():250] send_request: defer
+2022-07-10 19:56:36,569 INFO    SenderThread:27741 [sender.py:send_request_defer():389] handle sender defer: 1
+2022-07-10 19:56:36,569 INFO    SenderThread:27741 [sender.py:transition_state():393] send defer: 2
+2022-07-10 19:56:36,570 DEBUG   HandlerThread:27741 [handler.py:handle_request():140] handle_request: defer
+2022-07-10 19:56:36,570 DEBUG   SenderThread:27741 [sender.py:send():236] send: stats
+2022-07-10 19:56:36,570 INFO    HandlerThread:27741 [handler.py:handle_request_defer():163] handle defer: 2
+2022-07-10 19:56:36,571 DEBUG   SenderThread:27741 [sender.py:send_request():250] send_request: defer
+2022-07-10 19:56:36,572 INFO    SenderThread:27741 [sender.py:send_request_defer():389] handle sender defer: 2
+2022-07-10 19:56:36,572 INFO    SenderThread:27741 [sender.py:transition_state():393] send defer: 3
+2022-07-10 19:56:36,572 DEBUG   HandlerThread:27741 [handler.py:handle_request():140] handle_request: defer
+2022-07-10 19:56:36,572 INFO    HandlerThread:27741 [handler.py:handle_request_defer():163] handle defer: 3
+2022-07-10 19:56:36,573 DEBUG   SenderThread:27741 [sender.py:send_request():250] send_request: defer
+2022-07-10 19:56:36,573 INFO    SenderThread:27741 [sender.py:send_request_defer():389] handle sender defer: 3
+2022-07-10 19:56:36,573 INFO    SenderThread:27741 [sender.py:transition_state():393] send defer: 4
+2022-07-10 19:56:36,573 DEBUG   HandlerThread:27741 [handler.py:handle_request():140] handle_request: defer
+2022-07-10 19:56:36,573 INFO    HandlerThread:27741 [handler.py:handle_request_defer():163] handle defer: 4
+2022-07-10 19:56:36,574 DEBUG   SenderThread:27741 [sender.py:send():236] send: summary
+2022-07-10 19:56:36,575 INFO    SenderThread:27741 [sender.py:_save_file():952] saving file wandb-summary.json with policy end
+2022-07-10 19:56:36,575 DEBUG   SenderThread:27741 [sender.py:send_request():250] send_request: defer
+2022-07-10 19:56:36,575 INFO    SenderThread:27741 [sender.py:send_request_defer():389] handle sender defer: 4
+2022-07-10 19:56:36,575 INFO    SenderThread:27741 [sender.py:transition_state():393] send defer: 5
+2022-07-10 19:56:36,576 DEBUG   HandlerThread:27741 [handler.py:handle_request():140] handle_request: defer
+2022-07-10 19:56:36,576 INFO    HandlerThread:27741 [handler.py:handle_request_defer():163] handle defer: 5
+2022-07-10 19:56:36,576 DEBUG   SenderThread:27741 [sender.py:send_request():250] send_request: defer
+2022-07-10 19:56:36,576 INFO    SenderThread:27741 [sender.py:send_request_defer():389] handle sender defer: 5
+2022-07-10 19:56:36,633 DEBUG   HandlerThread:27741 [handler.py:handle_request():140] handle_request: poll_exit
+2022-07-10 19:56:36,761 INFO    SenderThread:27741 [sender.py:transition_state():393] send defer: 6
+2022-07-10 19:56:36,761 DEBUG   SenderThread:27741 [sender.py:send_request():250] send_request: poll_exit
+2022-07-10 19:56:36,763 DEBUG   HandlerThread:27741 [handler.py:handle_request():140] handle_request: defer
+2022-07-10 19:56:36,763 INFO    HandlerThread:27741 [handler.py:handle_request_defer():163] handle defer: 6
+2022-07-10 19:56:36,764 DEBUG   SenderThread:27741 [sender.py:send_request():250] send_request: defer
+2022-07-10 19:56:36,764 INFO    SenderThread:27741 [sender.py:send_request_defer():389] handle sender defer: 6
+2022-07-10 19:56:36,764 INFO    SenderThread:27741 [dir_watcher.py:finish():353] shutting down directory watcher
+2022-07-10 19:56:36,866 DEBUG   HandlerThread:27741 [handler.py:handle_request():140] handle_request: poll_exit
+2022-07-10 19:56:37,494 INFO    SenderThread:27741 [dir_watcher.py:_on_file_modified():286] file/dir modified: /home/will/projects/RL/RLBoard/wandb/run-20220710_195415-39ggj047/files/wandb-summary.json
+2022-07-10 19:56:37,495 INFO    SenderThread:27741 [dir_watcher.py:_on_file_modified():286] file/dir modified: /home/will/projects/RL/RLBoard/wandb/run-20220710_195415-39ggj047/files/output.log
+2022-07-10 19:56:37,495 INFO    SenderThread:27741 [dir_watcher.py:_on_file_modified():286] file/dir modified: /home/will/projects/RL/RLBoard/wandb/run-20220710_195415-39ggj047/files/config.yaml
+2022-07-10 19:56:37,495 INFO    SenderThread:27741 [dir_watcher.py:finish():383] scan: /home/will/projects/RL/RLBoard/wandb/run-20220710_195415-39ggj047/files
+2022-07-10 19:56:37,496 INFO    SenderThread:27741 [dir_watcher.py:finish():397] scan save: /home/will/projects/RL/RLBoard/wandb/run-20220710_195415-39ggj047/files/output.log output.log
+2022-07-10 19:56:37,496 INFO    SenderThread:27741 [dir_watcher.py:finish():397] scan save: /home/will/projects/RL/RLBoard/wandb/run-20220710_195415-39ggj047/files/conda-environment.yaml conda-environment.yaml
+2022-07-10 19:56:37,496 INFO    SenderThread:27741 [dir_watcher.py:finish():397] scan save: /home/will/projects/RL/RLBoard/wandb/run-20220710_195415-39ggj047/files/config.yaml config.yaml
+2022-07-10 19:56:37,497 INFO    SenderThread:27741 [dir_watcher.py:finish():397] scan save: /home/will/projects/RL/RLBoard/wandb/run-20220710_195415-39ggj047/files/wandb-metadata.json wandb-metadata.json
+2022-07-10 19:56:37,498 INFO    SenderThread:27741 [dir_watcher.py:finish():397] scan save: /home/will/projects/RL/RLBoard/wandb/run-20220710_195415-39ggj047/files/requirements.txt requirements.txt
+2022-07-10 19:56:37,506 INFO    SenderThread:27741 [dir_watcher.py:finish():397] scan save: /home/will/projects/RL/RLBoard/wandb/run-20220710_195415-39ggj047/files/wandb-summary.json wandb-summary.json
+2022-07-10 19:56:37,512 INFO    SenderThread:27741 [sender.py:transition_state():393] send defer: 7
+2022-07-10 19:56:37,513 DEBUG   SenderThread:27741 [sender.py:send_request():250] send_request: poll_exit
+2022-07-10 19:56:37,519 DEBUG   HandlerThread:27741 [handler.py:handle_request():140] handle_request: defer
+2022-07-10 19:56:37,519 INFO    HandlerThread:27741 [handler.py:handle_request_defer():163] handle defer: 7
+2022-07-10 19:56:37,520 DEBUG   SenderThread:27741 [sender.py:send_request():250] send_request: defer
+2022-07-10 19:56:37,520 INFO    SenderThread:27741 [sender.py:send_request_defer():389] handle sender defer: 7
+2022-07-10 19:56:37,521 INFO    SenderThread:27741 [file_pusher.py:finish():171] shutting down file pusher
+2022-07-10 19:56:37,622 DEBUG   HandlerThread:27741 [handler.py:handle_request():140] handle_request: poll_exit
+2022-07-10 19:56:37,623 DEBUG   SenderThread:27741 [sender.py:send_request():250] send_request: poll_exit
+2022-07-10 19:56:37,726 DEBUG   HandlerThread:27741 [handler.py:handle_request():140] handle_request: poll_exit
+2022-07-10 19:56:37,727 DEBUG   SenderThread:27741 [sender.py:send_request():250] send_request: poll_exit
+2022-07-10 19:56:37,830 DEBUG   HandlerThread:27741 [handler.py:handle_request():140] handle_request: poll_exit
+2022-07-10 19:56:37,831 DEBUG   SenderThread:27741 [sender.py:send_request():250] send_request: poll_exit
+2022-07-10 19:56:37,933 DEBUG   HandlerThread:27741 [handler.py:handle_request():140] handle_request: poll_exit
+2022-07-10 19:56:37,934 DEBUG   SenderThread:27741 [sender.py:send_request():250] send_request: poll_exit
+2022-07-10 19:56:38,018 INFO    Thread-15 :27741 [upload_job.py:push():138] Uploaded file /home/will/projects/RL/RLBoard/wandb/run-20220710_195415-39ggj047/files/requirements.txt
+2022-07-10 19:56:38,022 INFO    Thread-14 :27741 [upload_job.py:push():138] Uploaded file /home/will/projects/RL/RLBoard/wandb/run-20220710_195415-39ggj047/files/config.yaml
+2022-07-10 19:56:38,026 INFO    Thread-16 :27741 [upload_job.py:push():138] Uploaded file /home/will/projects/RL/RLBoard/wandb/run-20220710_195415-39ggj047/files/wandb-summary.json
+2022-07-10 19:56:38,029 INFO    Thread-13 :27741 [upload_job.py:push():138] Uploaded file /home/will/projects/RL/RLBoard/wandb/run-20220710_195415-39ggj047/files/conda-environment.yaml
+2022-07-10 19:56:38,036 DEBUG   HandlerThread:27741 [handler.py:handle_request():140] handle_request: poll_exit
+2022-07-10 19:56:38,037 DEBUG   SenderThread:27741 [sender.py:send_request():250] send_request: poll_exit
+2022-07-10 19:56:38,140 DEBUG   HandlerThread:27741 [handler.py:handle_request():140] handle_request: poll_exit
+2022-07-10 19:56:38,140 DEBUG   SenderThread:27741 [sender.py:send_request():250] send_request: poll_exit
+2022-07-10 19:56:38,244 DEBUG   HandlerThread:27741 [handler.py:handle_request():140] handle_request: poll_exit
+2022-07-10 19:56:38,244 DEBUG   SenderThread:27741 [sender.py:send_request():250] send_request: poll_exit
+2022-07-10 19:56:38,347 DEBUG   HandlerThread:27741 [handler.py:handle_request():140] handle_request: poll_exit
+2022-07-10 19:56:38,348 DEBUG   SenderThread:27741 [sender.py:send_request():250] send_request: poll_exit
+2022-07-10 19:56:38,355 INFO    Thread-12 :27741 [upload_job.py:push():138] Uploaded file /home/will/projects/RL/RLBoard/wandb/run-20220710_195415-39ggj047/files/output.log
+2022-07-10 19:56:38,452 DEBUG   HandlerThread:27741 [handler.py:handle_request():140] handle_request: poll_exit
+2022-07-10 19:56:38,452 DEBUG   SenderThread:27741 [sender.py:send_request():250] send_request: poll_exit
+2022-07-10 19:56:38,556 INFO    Thread-6  :27741 [sender.py:transition_state():393] send defer: 8
+2022-07-10 19:56:38,557 DEBUG   HandlerThread:27741 [handler.py:handle_request():140] handle_request: poll_exit
+2022-07-10 19:56:38,558 DEBUG   SenderThread:27741 [sender.py:send_request():250] send_request: poll_exit
+2022-07-10 19:56:38,559 DEBUG   HandlerThread:27741 [handler.py:handle_request():140] handle_request: defer
+2022-07-10 19:56:38,560 INFO    HandlerThread:27741 [handler.py:handle_request_defer():163] handle defer: 8
+2022-07-10 19:56:38,560 DEBUG   SenderThread:27741 [sender.py:send_request():250] send_request: defer
+2022-07-10 19:56:38,561 INFO    SenderThread:27741 [sender.py:send_request_defer():389] handle sender defer: 8
+2022-07-10 19:56:38,664 DEBUG   HandlerThread:27741 [handler.py:handle_request():140] handle_request: poll_exit
+2022-07-10 19:56:38,840 INFO    SenderThread:27741 [sender.py:transition_state():393] send defer: 9
+2022-07-10 19:56:38,840 DEBUG   SenderThread:27741 [sender.py:send_request():250] send_request: poll_exit
+2022-07-10 19:56:38,842 DEBUG   HandlerThread:27741 [handler.py:handle_request():140] handle_request: defer
+2022-07-10 19:56:38,842 INFO    HandlerThread:27741 [handler.py:handle_request_defer():163] handle defer: 9
+2022-07-10 19:56:38,843 DEBUG   SenderThread:27741 [sender.py:send_request():250] send_request: defer
+2022-07-10 19:56:38,843 INFO    SenderThread:27741 [sender.py:send_request_defer():389] handle sender defer: 9
+2022-07-10 19:56:38,843 INFO    SenderThread:27741 [sender.py:transition_state():393] send defer: 10
+2022-07-10 19:56:38,846 DEBUG   HandlerThread:27741 [handler.py:handle_request():140] handle_request: defer
+2022-07-10 19:56:38,847 INFO    HandlerThread:27741 [handler.py:handle_request_defer():163] handle defer: 10
+2022-07-10 19:56:38,846 DEBUG   SenderThread:27741 [sender.py:send():236] send: final
+2022-07-10 19:56:38,848 DEBUG   SenderThread:27741 [sender.py:send():236] send: footer
+2022-07-10 19:56:38,848 DEBUG   SenderThread:27741 [sender.py:send_request():250] send_request: defer
+2022-07-10 19:56:38,848 INFO    SenderThread:27741 [sender.py:send_request_defer():389] handle sender defer: 10
+2022-07-10 19:56:38,945 DEBUG   HandlerThread:27741 [handler.py:handle_request():140] handle_request: poll_exit
+2022-07-10 19:56:38,945 DEBUG   SenderThread:27741 [sender.py:send_request():250] send_request: poll_exit
+2022-07-10 19:56:38,946 INFO    SenderThread:27741 [file_pusher.py:join():176] waiting for file pusher
+2022-07-10 19:56:39,549 DEBUG   HandlerThread:27741 [handler.py:handle_request():140] handle_request: sampled_history
+2022-07-10 19:56:39,551 DEBUG   HandlerThread:27741 [handler.py:handle_request():140] handle_request: get_summary
+2022-07-10 19:56:39,554 DEBUG   HandlerThread:27741 [handler.py:handle_request():140] handle_request: shutdown
+2022-07-10 19:56:39,554 INFO    HandlerThread:27741 [handler.py:finish():806] shutting down handler
+2022-07-10 19:56:39,847 INFO    WriterThread:27741 [datastore.py:close():279] close: /home/will/projects/RL/RLBoard/wandb/run-20220710_195415-39ggj047/run-39ggj047.wandb
+2022-07-10 19:56:40,447 INFO    SenderThread:27741 [sender.py:finish():1114] shutting down sender
+2022-07-10 19:56:40,447 INFO    SenderThread:27741 [file_pusher.py:finish():171] shutting down file pusher
+2022-07-10 19:56:40,447 INFO    SenderThread:27741 [file_pusher.py:join():176] waiting for file pusher
+2022-07-10 19:56:40,453 INFO    MainThread:27741 [internal.py:handle_exit():80] Internal process exited

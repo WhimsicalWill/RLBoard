@@ -2,6 +2,7 @@ import gym
 import numpy as np
 import pickle
 import os
+import wandb
 from imageio import mimsave
 
 
@@ -12,7 +13,7 @@ class EnvState():
 		self.priority = priority
 
 class HotStarts(gym.Wrapper):
-	def __init__(self, env, save_dir, max_size=10): # TODO: change to save_dir
+	def __init__(self, env, save_dir, max_size=9): # TODO: change to save_dir
 		super(HotStarts, self).__init__(env)
 		self.env = env
 		self.state_dir = f"{save_dir}/states"
@@ -20,7 +21,7 @@ class HotStarts(gym.Wrapper):
 		self.max_size = max_size
 		self.hot_starts = [] # to be populated by user with starting env states
   
-		self.visualizer = Visualizer(self.env, self.viz_dir)
+		self.visualizer = Visualizer(self.env, self.viz_dir, 3)
 
 	def track_state(self, obs_):
 		if len(self.hot_starts) >= self.max_size:
@@ -46,26 +47,35 @@ class HotStarts(gym.Wrapper):
 
 	# agent_policy is the agent's mapping from observations to actions
 	def visualize_hot_starts(self, agent_policy):
+		self.visualizer.reset_frame_collage()
 		for i, hot_start in enumerate(self.hot_starts):
 			self.env.reset() # reset needed since step count needs to be reset
 			self.env.sim.set_state(hot_start.sim_state)
 			first_obs = hot_start.first_obs
 			self.visualizer.env_runner(first_obs, agent_policy, i)
+		self.visualizer.log_gif()
    
 class Visualizer():
 	# TODO: put config details in config.json for easy user editing
-	def __init__(self, env, viz_dir, max_steps=500, px=256):
+	def __init__(self, env, viz_dir, grid_width, max_steps=500, px=128):
 		self.env = env
 		self.viz_dir = viz_dir
+		self.grid_width = grid_width
 		self.max_steps = max_steps
 		self.px = px
-		
-	def env_runner(self, first_obs, agent_policy, save_name):
+		self.num_color_channels = 3
+		self.frame_collage = np.zeros((max_steps, grid_width * px, grid_width * px, self.num_color_channels))
+
+	def reset_frame_collage(self):
+		self.frame_collage = np.zeros((self.max_steps, self.grid_width * self.px,
+								 		self.grid_width * self.px, self.num_color_channels))
+
+	def env_runner(self, first_obs, agent_policy, hot_start_num):
 		obs = first_obs
 		done = False
-		score, steps = 0, 0
+		score, step = 0, 0
 		frames = []
-		while not done and steps < self.max_steps:
+		while not done and step < self.max_steps:
 			action = agent_policy(obs) # this call may vary by implementation
 			obs_, reward, done, info = self.env.step(action)
 			render_img = self.env.render(
@@ -74,18 +84,48 @@ class Visualizer():
 				height=self.px,
 			)
 			frames.append(render_img)
+			self.add_to_gif_collage(render_img, step, hot_start_num)
 			score += reward
-			steps += 1
+			step += 1
 			obs = obs_
-		print(f"Checkpoint {save_name}, score: {score}, steps: {steps}")
-		self.save_vid(frames, save_name)
+		print(f"Checkpoint {hot_start_num}, score: {score}, step: {step}")
+		self.save_vid(frames, hot_start_num)
 	
-	def save_vid(self, frames, save_name):
-		print(f"Saving gif {save_name} to {self.viz_dir}")
-		mimsave(f"{self.viz_dir}/hot_start_{save_name}.gif", frames)
+	def save_vid(self, frames, hot_start_num):
+		print(f"Saving gif {hot_start_num} to {self.viz_dir}")
+		filename = f"{self.viz_dir}/hot_start_{hot_start_num}.gif"
+		mimsave(filename, frames)
+	
+	def add_to_gif_collage(self, img, step, hot_start_num):
+		grid_y_block = hot_start_num // self.grid_width
+		grid_x_block = hot_start_num % self.grid_width
+		grid_y_start = grid_y_block * self.px
+		grid_x_start = grid_x_block * self.px
+		self.frame_collage[step, grid_y_start:grid_y_start+self.px, grid_x_start:grid_x_start+self.px, :] = img
+
+	def log_gif(self):
+		print(f"Saving gif collage to {self.viz_dir}")
+		filename = f"{self.viz_dir}/hot_start_collage.gif"
+		# self.frame_collage = (self.frame_collage * 255).astype(np.uint8)
+		mimsave(filename, self.frame_collage.astype(np.uint8))
+		print(self.frame_collage.dtype)
+		wandb.log({"video": wandb.Video(filename, fps=30, format="gif")})
 
 # TODO2:
 # In the future, we could have env states saved in a dictionary, to make deleting by key easy
-# Transition the functionality towards in memory, and saving/loading whole directories
-# 
-#
+
+
+# TODO3: 
+# Now I am thinking about how to nicely put all of the visualization on the wandb board
+# I should enforce that max_size = n^2, and nicely collage a lot of frames into one gif.
+# In the future, I can support any max_size by creating a collage with the next highest n^2
+# Convert images from float32 to uint8 before saving
+# Investigate changing the size of the video logged on the wandb board
+# Note: wandb can log a video straight from a numpy array. Also reads format (B, T, C, H, W) for batched vids
+
+# TODO4:
+# Do a dry run of training (on a different environment for fun) on the Ant env with RLBoard
+# Before training run, collect the 9 env states
+# Then during training, periodically call env.visualize_hot_starts() to log the gif collage to wandb
+# the interval can be 1/10 of the total training steps
+# Also, log the reward per episode to wandb
