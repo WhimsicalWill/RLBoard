@@ -6,7 +6,7 @@ def should_save_checkpoint():
 	return np.random.random() < .001
 
 if __name__ == '__main__':
-	env_name = 'HalfCheetah-v3'
+	env_name = 'Ant-v3'
 	save_dir = 'data'
 	env = gym.make(env_name)
 	env = HotStarts(env, save_dir)

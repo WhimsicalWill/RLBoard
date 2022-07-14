@@ -69,11 +69,10 @@ class Visualizer():
 		self.size_offset = border_thickness + grid_block_width * border_thickness
 		self.grid_px_width = grid_block_width * px + self.size_offset
 		
-		self.frame_collage = np.zeros((max_steps, grid_px_width, grid_px_width, self.num_color_channels))
+		self.frame_collage = np.zeros((max_steps, self.grid_px_width, self.grid_px_width, self.num_color_channels))
 
 	def reset_frame_collage(self):
-		self.frame_collage = np.zeros((self.max_steps, self.grid_block_width * self.px,
-								 		self.grid_block_width * self.px, self.num_color_channels))
+		self.frame_collage = np.zeros((self.max_steps, self.grid_px_width, self.grid_px_width, self.num_color_channels))
 
 	def env_runner(self, first_obs, agent_policy, hot_start_num):
 		obs = first_obs
