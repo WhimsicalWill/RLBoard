@@ -57,18 +57,23 @@ class HotStarts(gym.Wrapper):
    
 class Visualizer():
 	# TODO: put config details in config.json for easy user editing
-	def __init__(self, env, viz_dir, grid_width, max_steps=500, px=128):
+	def __init__(self, env, viz_dir, grid_block_width, max_steps=500, px=128, border_thickness=5):
 		self.env = env
 		self.viz_dir = viz_dir
-		self.grid_width = grid_width
+		self.grid_block_width = grid_block_width
 		self.max_steps = max_steps
 		self.px = px
+		self.border_thickness = border_thickness
+  
 		self.num_color_channels = 3
-		self.frame_collage = np.zeros((max_steps, grid_width * px, grid_width * px, self.num_color_channels))
+		self.size_offset = border_thickness + grid_block_width * border_thickness
+		self.grid_px_width = grid_block_width * px + self.size_offset
+		
+		self.frame_collage = np.zeros((max_steps, grid_px_width, grid_px_width, self.num_color_channels))
 
 	def reset_frame_collage(self):
-		self.frame_collage = np.zeros((self.max_steps, self.grid_width * self.px,
-								 		self.grid_width * self.px, self.num_color_channels))
+		self.frame_collage = np.zeros((self.max_steps, self.grid_block_width * self.px,
+								 		self.grid_block_width * self.px, self.num_color_channels))
 
 	def env_runner(self, first_obs, agent_policy, hot_start_num):
 		obs = first_obs
@@ -97,10 +102,10 @@ class Visualizer():
 		mimsave(filename, frames)
 	
 	def add_to_gif_collage(self, img, step, hot_start_num):
-		grid_y_block = hot_start_num // self.grid_width
-		grid_x_block = hot_start_num % self.grid_width
-		grid_y_start = grid_y_block * self.px
-		grid_x_start = grid_x_block * self.px
+		grid_y_block = hot_start_num // self.grid_block_width
+		grid_x_block = hot_start_num % self.grid_block_width
+		grid_y_start = grid_y_block * self.px + self.border_thickness * (grid_y_block + 1) 
+		grid_x_start = grid_x_block * self.px + self.border_thickness * (grid_x_block + 1)
 		self.frame_collage[step, grid_y_start:grid_y_start+self.px, grid_x_start:grid_x_start+self.px, :] = img
 
 	def log_gif(self):
@@ -108,7 +113,6 @@ class Visualizer():
 		filename = f"{self.viz_dir}/hot_start_collage.gif"
 		# self.frame_collage = (self.frame_collage * 255).astype(np.uint8)
 		mimsave(filename, self.frame_collage.astype(np.uint8))
-		print(self.frame_collage.dtype)
 		wandb.log({"video": wandb.Video(filename, fps=30, format="gif")})
 
 # TODO2:
@@ -122,6 +126,9 @@ class Visualizer():
 # Convert images from float32 to uint8 before saving
 # Investigate changing the size of the video logged on the wandb board
 # Note: wandb can log a video straight from a numpy array. Also reads format (B, T, C, H, W) for batched vids
+
+# TODO3.5:
+# Create black borders in the gif collage
 
 # TODO4:
 # Do a dry run of training (on a different environment for fun) on the Ant env with RLBoard
