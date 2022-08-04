@@ -4,7 +4,7 @@ from agent_class import Agent
 from utils import plot_learning_curve
 
 if __name__ == '__main__':
-    env = gym.make('HalfCheetah-v3')
+    env = gym.make('Ant-v3')
     agent = Agent(alpha=0.0003, beta=0.0003, reward_scale=2, 
                     input_dims=env.observation_space.shape,
                     tau=0.005, batch_size=256, fc1_dims=256, fc2_dims=256, 
@@ -15,7 +15,7 @@ if __name__ == '__main__':
 
     best_score = env.reward_range[0] # init to smallest possible reward
     score_history = []
-    load_checkpoint = True
+    load_checkpoint = False
 
     if load_checkpoint:
         agent.load_models()
