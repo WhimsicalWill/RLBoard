@@ -20,7 +20,6 @@ class HotStarts(gym.Wrapper):
 		self.viz_dir = f"{save_dir}/viz"
 		self.max_size = max_size
 		self.hot_starts = [] # to be populated by user with starting env states
-  
 		self.visualizer = Visualizer(self.env, self.viz_dir, 3)
 
 	def track_state(self, obs_):

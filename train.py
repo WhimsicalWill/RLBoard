@@ -6,7 +6,7 @@ from wrappers import HotStarts
 # from utils import plot_learning_curve
 
 if __name__ == '__main__':
-	wandb.init('RLBoard', name='Ant-run-01')
+	wandb.init('RLBoard', name='Ant-run-04')
 	env_name = 'Ant-v3'
 	save_dir = 'data'
 	env = gym.make(env_name)
@@ -20,13 +20,13 @@ if __name__ == '__main__':
 	wandb.watch(agent.critic_1, log='all')
 	wandb.watch(agent.value, log='all')
  
-	n_games = 250
+	n_games = 500
 	viz_checkpoints = 10
 	viz_interval = n_games // 10
 
 	best_score = env.reward_range[0] # init to smallest possible reward
 	score_history = []
-	load_checkpoint = False
+	load_checkpoint = True
 
 	if load_checkpoint: # start training from a checkpoint
 		agent.load_models()
