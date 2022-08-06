@@ -51,4 +51,6 @@ The combined loss (inverse_loss + forward_loss) essentially says: predict some a
 
 If not for this constraint, many trivial solutions would be possible, such as an encoder that maps all states to zero.
 
+From the ICM paper: "As there is **no incentive** for φ(st) to encode any environmental features that **can not influence** or **are not influenced by** the agent’s actions, the learned exploration strategy of our agent is robust to uncontrollable aspects of the environment"
+
 
