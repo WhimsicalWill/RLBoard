@@ -2,7 +2,6 @@ import gym
 import numpy as np
 import pickle
 import os
-import wandb
 from imageio import mimsave
 
 
@@ -50,8 +49,7 @@ class HotStarts(gym.Wrapper):
 		for i, hot_start in enumerate(self.hot_starts):
 			self.env.reset() # reset needed since step count needs to be reset
 			self.env.sim.set_state(hot_start.sim_state)
-			first_obs = hot_start.first_obs
-			self.visualizer.env_runner(first_obs, agent_policy, i)
+			self.visualizer.env_runner(hot_start.first_obs, agent_policy, i)
 		self.visualizer.log_gif()
    
 class Visualizer():
@@ -63,8 +61,9 @@ class Visualizer():
 		self.max_steps = max_steps
 		self.px = px
 		self.border_thickness = border_thickness
-  
 		self.num_color_channels = 3
+
+		# calculate how many additional pixels are due to the border
 		self.size_offset = border_thickness + grid_block_width * border_thickness
 		self.grid_px_width = grid_block_width * px + self.size_offset
 		
@@ -109,9 +108,7 @@ class Visualizer():
 	def log_gif(self):
 		print(f"Saving gif collage to {self.viz_dir}")
 		filename = f"{self.viz_dir}/hot_start_collage.gif"
-		# self.frame_collage = (self.frame_collage * 255).astype(np.uint8)
 		mimsave(filename, self.frame_collage.astype(np.uint8))
-		wandb.log({"video": wandb.Video(filename, fps=30, format="gif")})
 
 # TODO2:
 # In the future, we could have env states saved in a dictionary, to make deleting by key easy

@@ -7,7 +7,7 @@ from torch.utils.tensorboard import SummaryWriter
 
 if __name__ == '__main__':
 	wandb.init('RLBoard', name='test_run_01')
-	env_name = 'HalfCheetah-v3'
+	env_name = 'Ant-v3'
 	save_dir = 'data'
 	env = gym.make(env_name)
 	env = HotStarts(env, save_dir)
