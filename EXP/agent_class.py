@@ -22,9 +22,9 @@ class Agent():
 		self.value = ValueNetwork(beta, input_dims, fc1_dims, fc2_dims, "value")
 		self.target_value = ValueNetwork(beta, input_dims, fc1_dims, fc2_dims, "target_value")
 
-		ensemble_size = 5
-		hidden_size = 64
-		self.one_step_models = self.get_one_step_models(ensemble_size, input_dims, action_dim, hidden_size)
+		self.ensemble_size = 5
+		self.hidden_size = 64
+		self.one_step_models = self.get_one_step_models()
 
 		self.update_agent_parameters(tau=1) # hard update with tau=1 for initial full copying of weights
 
@@ -46,10 +46,10 @@ class Agent():
 		# print(f"model_variance: {model_variance}")
 		return model_variance.norm(p=2) # 2-norm of variance
 
-	def get_one_step_models(self, num_models, input_dims, action_dim, hidden_size):
+	def get_one_step_models(self):
 		models = []
-		for i in range(num_models):
-			models.append(OneStepModel(input_dims, action_dim, hidden_size, f"one_step{i+1}"))
+		for i in range(self.ensemble_size):
+			models.append(OneStepModel(self.input_dims, self.action_dim, self.hidden_size, f"one_step{i+1}"))
 		return models
 
 	def learn(self):
@@ -109,6 +109,17 @@ class Agent():
 		(critic_1_loss + critic_2_loss).backward()
 		self.critic_1.optimizer.step()
 		self.critic_2.optimizer.step()
+
+		# <---- CRITIC UPDATE ---->
+		for i in range(self.ensemble_size):
+			self.one_step_models[i].optimizer.zero_grad()
+			# minimize MSE between prediction of state and actual s'
+			# state shape: (B, D1) | action shape: (B, D2)
+			state_prediction = self.one_step_models[i](state, action)
+			one_step_loss = F.mse_loss(state_prediction, state_)
+			print(f"MODEL{i+1} Loss: {one_step_loss}")
+			one_step_loss.backward()
+			self.one_step_models[i].optimizer.step()
 
 		# Do a soft update to target value function after each learning step
 		self.update_agent_parameters()
