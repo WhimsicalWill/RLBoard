@@ -5,17 +5,16 @@ import torch.optim as optim
 import numpy as np
 
 class CriticNetwork(nn.Module):
-	def __init__(self, beta, input_dims, fc1_dims, fc2_dims, action_dim, name,
-					chkpt_dir='tmp/sac'):
+	def __init__(self, beta, input_dims, fc1_dims, fc2_dims, action_dim,
+					name, chkpt_dir='tmp/exp'):
 		super(CriticNetwork, self).__init__()
 		self.beta = beta
 		self.input_dims = input_dims
 		self.fc1_dims = fc1_dims
 		self.fc2_dims = fc2_dims
 		self.action_dim = action_dim
-		self.name = name
 		self.chkpt_dir = chkpt_dir
-		self.chkpt_file = f"{chkpt_dir}/{name}_sac"
+		self.chkpt_file = f"{chkpt_dir}/{name}_exp"
 
 		self.fc1 = nn.Linear(input_dims[0] + action_dim, fc1_dims)
 		self.fc2 = nn.Linear(fc1_dims, fc2_dims)
@@ -40,21 +39,15 @@ class CriticNetwork(nn.Module):
 	def load_checkpoint(self):
 		self.load_state_dict(torch.load(self.chkpt_file))
 
-	def save_best(self):
-		checkpoint_file = f"{self.chkpt_dir}/{self.name}_best"
-		torch.save(self.state_dict(), checkpoint_file)
-
 class ActorNetwork(nn.Module):
 	def __init__(self, alpha, input_dims, fc1_dims, fc2_dims, action_dim,
-					max_action, name, chkpt_dir='tmp/sac'):
+					max_action, name, chkpt_dir='tmp/exp'):
 		super(ActorNetwork, self).__init__()
 		self.input_dims = input_dims
 		self.fc1_dims = fc1_dims
 		self.fc2_dims = fc2_dims
 		self.action_dim = action_dim # this really should be 'action_dim' since it's not nec. discrete
-		self.name = name
-		self.chkpt_dir = chkpt_dir
-		self.chkpt_file = f"{chkpt_dir}/{name}_sac"
+		self.chkpt_file = f"{chkpt_dir}/{name}_exp"
 		self.max_action = max_action
 		self.reparam_noise = 1e-6
 
@@ -101,19 +94,12 @@ class ActorNetwork(nn.Module):
 	def load_checkpoint(self):
 		self.load_state_dict(torch.load(self.chkpt_file))
 	
-	def save_best(self):
-		checkpoint_file = f"{self.chkpt_dir}/{self.name}_best"
-		torch.save(self.state_dict(), checkpoint_file)
-
 class ValueNetwork(nn.Module):
-	def __init__(self, lr, input_dims, fc1_dims, fc2_dims, name, chkpt_dir='tmp/sac'):
+	def __init__(self, lr, input_dims, fc1_dims, fc2_dims, name, chkpt_dir='tmp/exp'):
 		super(ValueNetwork, self).__init__()
-		self.input_dims = input_dims
-		self.fc1_dims = fc1_dims
-		self.fc2_dims = fc2_dims
 		self.name = name
 		self.chkpt_dir = chkpt_dir
-		self.chkpt_file = f"{chkpt_dir}/{name}_sac"
+		self.chkpt_file = f"{chkpt_dir}/{name}_exp"
 
 		self.fc1 = nn.Linear(*input_dims, fc1_dims)
 		self.fc2 = nn.Linear(fc1_dims, fc2_dims)
@@ -135,7 +121,31 @@ class ValueNetwork(nn.Module):
 
 	def load_checkpoint(self):
 		self.load_state_dict(torch.load(self.chkpt_file))
-	
-	def save_best(self):
-		checkpoint_file = f"{self.chkpt_dir}/{self.name}_best"
-		torch.save(self.state_dict(), checkpoint_file)
+
+class OneStepModel(nn.Module):
+	def __init__(self, input_dims, action_dim, hidden_size, name, chkpt_dir='tmp/exp'):
+		super(OneStepModel, self).__init__()
+		self.chkpt_dir = chkpt_dir
+		self.chkpt_file = f"{chkpt_dir}/{name}_exp"
+
+		self.fc1 = nn.Linear(input_dims[0] + action_dim, hidden_size)
+		self.fc2 = nn.Linear(hidden_size + action_dim, hidden_size)
+		self.state = nn.Linear(hidden_size, input_dims[0])
+
+		self.optimizer = optim.Adam(self.parameters())
+		self.device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+		self.to(self.device)
+
+	def forward(self, state, action):
+		x = torch.cat([state, action], dim=-1)
+		x = F.relu(self.fc1(x))
+		x = torch.cat([x, action], dim=-1)
+		x = F.relu(self.fc2(x))
+		mean_state = self.state(x)
+		return mean_state
+
+	def save_checkpoint(self):
+		torch.save(self.state_dict(), self.chkpt_file)
+
+	def load_checkpoint(self):
+		self.load_state_dict(torch.load(self.chkpt_file))

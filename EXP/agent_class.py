@@ -2,7 +2,7 @@ import torch
 import torch.nn.functional as F
 import numpy as np
 from utils import ReplayBuffer
-from networks import ActorNetwork, CriticNetwork, ValueNetwork
+from networks import ActorNetwork, CriticNetwork, ValueNetwork, OneStepModel
 
 class Agent():
 	def __init__(self, alpha, beta, input_dims, tau, env, action_dim, 
@@ -11,6 +11,7 @@ class Agent():
 		self.gamma = gamma
 		self.tau = tau
 		self.batch_size = batch_size
+		self.input_dims = input_dims
 		self.action_dim = action_dim
 		self.scale = reward_scale
 		self.memory = ReplayBuffer(max_size, input_dims, action_dim)
@@ -21,6 +22,10 @@ class Agent():
 		self.value = ValueNetwork(beta, input_dims, fc1_dims, fc2_dims, "value")
 		self.target_value = ValueNetwork(beta, input_dims, fc1_dims, fc2_dims, "target_value")
 
+		ensemble_size = 5
+		hidden_size = 64
+		self.one_step_models = self.get_one_step_models(ensemble_size, input_dims, action_dim, hidden_size)
+
 		self.update_agent_parameters(tau=1) # hard update with tau=1 for initial full copying of weights
 
 	def store_transition(self, state, action, reward, state_, done):
@@ -28,8 +33,24 @@ class Agent():
 
 	def choose_action(self, observation):
 		state = torch.tensor([observation], dtype=torch.float).to(self.actor.device)
-		actions, _ = self.actor.sample_normal(state, reparameterize=False)
-		return actions.cpu().detach().numpy()[0]
+		action, _ = self.actor.sample_normal(state, reparameterize=False)
+		prediction_variance = self.get_one_step_predictions(state, action)
+		# print(f"Variance of (s, a): {prediction_variance}")
+		return action.cpu().detach().numpy()[0]
+
+	def get_one_step_predictions(self, state, action):
+		model_outputs = torch.zeros((len(self.one_step_models), self.input_dims[0]))
+		for i in range(len(self.one_step_models)):
+			model_outputs[i, :] = self.one_step_models[i](state, action)
+		model_variance = torch.var(model_outputs, dim=0)
+		# print(f"model_variance: {model_variance}")
+		return model_variance.norm(p=2) # 2-norm of variance
+
+	def get_one_step_models(self, num_models, input_dims, action_dim, hidden_size):
+		models = []
+		for i in range(num_models):
+			models.append(OneStepModel(input_dims, action_dim, hidden_size, f"one_step{i+1}"))
+		return models
 
 	def learn(self):
 		if self.memory.mem_ctr < self.batch_size:
