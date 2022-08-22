@@ -1,5 +1,5 @@
 __pycache__
 data
 wandb
-**/tmp/*
-**/plots/*
+/**/tmp/*
+/**/plots/*
