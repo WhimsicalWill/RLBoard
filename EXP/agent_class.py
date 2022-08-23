@@ -5,7 +5,7 @@ from utils import ReplayBuffer
 from networks import ActorNetwork, CriticNetwork, ValueNetwork, OneStepModel
 
 class Agent():
-	def __init__(self, alpha, beta, input_dims, tau, env, action_dim, 
+	def __init__(self, alpha, beta, input_dims, tau, env, action_dim,
 					gamma=0.99, max_size=1000000, fc1_dims=256,
 					 fc2_dims=256,  batch_size=100, reward_scale=2):
 		self.gamma = gamma
@@ -13,6 +13,7 @@ class Agent():
 		self.batch_size = batch_size
 		self.input_dims = input_dims
 		self.action_dim = action_dim
+		self.env = env
 		self.scale = reward_scale
 		self.experience_memory = ReplayBuffer(max_size, input_dims, action_dim)
 		self.episode_memory = RolloutBuffer()
@@ -55,7 +56,7 @@ class Agent():
 			models.append(OneStepModel(self.input_dims, self.action_dim, self.hidden_size, f"one_step{i+1}"))
 		return models
 
-	def learn(self):
+	def learn(self, obs_):
 		if self.experience_memory.mem_ctr < self.batch_size:
 			return # don't learn until we can sample at least a full batch
 
@@ -127,6 +128,14 @@ class Agent():
 		# <---- STARTING DIST UPDATE ---->
 		past_states = self.episode_memory.states[-self.curiosity_horizon:]
 		past_actions = self.episode_memory.actions[-self.curiosity_horizon:]
+		past_states = torch.tensor(past_states, dtype=torch.float32).to(self.actor.device)
+		past_actions = torch.tensor(past_actions, dtype=torch.float32).to(self.actor.device)
+
+		total_curiosity = 0
+		for i in range(past_states.shape[0]):
+			prediction_variance = self.get_one_step_predictions(past_states[i], past_actions[i])
+			total_curiosity += prediction_variance
+		env.track_state_if_needed(total_curiosity, obs_, past_states, past_actions)
 
 		# Do a soft update to target value function after each learning step
 		self.update_agent_parameters()

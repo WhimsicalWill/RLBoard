@@ -9,7 +9,7 @@ from wrappers import HotStarts
 def train(env_name):
 	save_dir = 'data'
 	env = gym.make(env_name)
-	# env = HotStarts(env, save_dir)
+	env = HotStarts(env, save_dir)
 	agent = Agent(alpha=0.0003, beta=0.0003, input_dims=env.observation_space.shape,
 					tau=0.005, env=env, action_dim=env.action_space.shape[0]) 
 	total_steps = 3e5
@@ -26,7 +26,7 @@ def train(env_name):
 			action = agent.choose_action(observation)
 			observation_, reward, done, info = env.step(action)
 			agent.store_transition(observation, action, reward, observation_, done)
-			agent.learn()
+			agent.learn(observation_)
 			score += reward
 			steps += 1
 			observation = observation_

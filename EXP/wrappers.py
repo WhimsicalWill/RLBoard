@@ -7,10 +7,11 @@ from imageio import mimsave
 
 
 class EnvState():
-	def __init__(self, sim_state, first_obs, priority=0):
+	def __init__(self, sim_state, first_obs, states, actions):
 		self.sim_state = sim_state
 		self.first_obs = first_obs
-		self.priority = priority
+		self.states = states
+		self.actions = actions
 
 class HotStarts(gym.Wrapper):
 	def __init__(self, env, save_dir, max_size=9): # TODO: change to save_dir
@@ -22,14 +23,14 @@ class HotStarts(gym.Wrapper):
 		self.hot_starts = [] # heap containing hot starts
 		self.visualizer = Visualizer(self.env, self.viz_dir, 3)
 
-	def track_state_if_needed(self, obs_, priority, transitions):
+	def track_state_if_needed(self, priority, obs_, states, actions):
 		# TODO: also check that EnvState for this (sim_state, obs_) not already added
 
 		if len(self.hot_starts) == max_size and priority < self.hot_starts[0]:
 			return
 		
 		sim_state = self.env.sim.get_state()
-		env_state = EnvState(sim_state, obs_, transitions)
+		env_state = EnvState(sim_state, obs_, states, actions)
 		if len(self.hot_starts) < max_size:
 			heappush(self.hot_starts, env_state)
 		else:
