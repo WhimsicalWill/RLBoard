@@ -21,6 +21,7 @@ def train(env_name):
 		observation = env.reset()
 		score = 0
 		episodes += 1
+		agent.episode_memory.clear()
 		while not done:
 			action = agent.choose_action(observation)
 			observation_, reward, done, info = env.step(action)

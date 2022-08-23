@@ -14,7 +14,8 @@ class Agent():
 		self.input_dims = input_dims
 		self.action_dim = action_dim
 		self.scale = reward_scale
-		self.memory = ReplayBuffer(max_size, input_dims, action_dim)
+		self.experience_memory = ReplayBuffer(max_size, input_dims, action_dim)
+		self.episode_memory = RolloutBuffer()
 		
 		self.actor = ActorNetwork(alpha, input_dims, fc1_dims, fc2_dims, action_dim, env.action_space.high, "actor") # TODO: match params
 		self.critic_1 = CriticNetwork(beta, input_dims, fc1_dims, fc2_dims, action_dim, "critic_1")
@@ -24,12 +25,14 @@ class Agent():
 
 		self.ensemble_size = 5
 		self.hidden_size = 64
+		self.curiosity_horizon = 3
 		self.one_step_models = self.get_one_step_models()
 
 		self.update_agent_parameters(tau=1) # hard update with tau=1 for initial full copying of weights
 
 	def store_transition(self, state, action, reward, state_, done):
-		self.memory.store_transition(state, action, reward, state_, done)
+		self.experience_memory.store_transition(state, action, reward, state_, done)
+		self.episode_memory.store_transition(state, action)
 
 	def choose_action(self, observation):
 		state = torch.tensor([observation], dtype=torch.float).to(self.actor.device)
@@ -53,11 +56,11 @@ class Agent():
 		return models
 
 	def learn(self):
-		if self.memory.mem_ctr < self.batch_size:
+		if self.experience_memory.mem_ctr < self.batch_size:
 			return # don't learn until we can sample at least a full batch
 
-		# Sample memory buffer uniformly
-		state, action, reward, state_, done = self.memory.sample_buffer(self.batch_size)
+		# Sample experience_memory buffer uniformly
+		state, action, reward, state_, done = self.experience_memory.sample_buffer(self.batch_size)
 
 		# Convert from numpy arrays to torch tensors for computation graph
 		state = torch.tensor(state, dtype=torch.float).to(self.actor.device)
@@ -120,6 +123,10 @@ class Agent():
 			print(f"MODEL{i+1} Loss: {one_step_loss}")
 			one_step_loss.backward()
 			self.one_step_models[i].optimizer.step()
+
+		# <---- STARTING DIST UPDATE ---->
+		past_states = self.episode_memory.states[-self.curiosity_horizon:]
+		past_actions = self.episode_memory.actions[-self.curiosity_horizon:]
 
 		# Do a soft update to target value function after each learning step
 		self.update_agent_parameters()

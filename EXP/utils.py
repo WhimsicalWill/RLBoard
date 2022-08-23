@@ -13,7 +13,7 @@ def plot_learning_curve(scores, figure_file):
 	plt.title('Running average of previous 100 scores')
 	plt.savefig(figure_file)
 
-class ReplayBuffer():
+class ReplayBuffer:
 	def __init__(self, max_size, input_shape, n_actions):
 		self.mem_size = max_size
 		self.mem_ctr = 0
@@ -50,6 +50,19 @@ class ReplayBuffer():
 		done = self.terminal_memory[batch]
 
 		return states, actions, rewards, states_, done
+
+# TODO: track the last n actions (dequeue?)
+class RolloutBuffer:
+	def __init__(self):
+		self.clear()
+
+	def clear(self):
+		self.states = []
+		self.actions = []
+
+	def store_transition(self, state, action):
+		self.states.append(state)
+		self.actions.append(action)
 
 def render_games(env_name):
 	env = gym.make(env_name)

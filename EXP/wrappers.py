@@ -23,6 +23,8 @@ class HotStarts(gym.Wrapper):
 		self.visualizer = Visualizer(self.env, self.viz_dir, 3)
 
 	def track_state_if_needed(self, obs_, priority, transitions):
+		# TODO: also check that EnvState for this (sim_state, obs_) not already added
+
 		if len(self.hot_starts) == max_size and priority < self.hot_starts[0]:
 			return
 		
@@ -46,7 +48,7 @@ class HotStarts(gym.Wrapper):
 				pickle.dump(env_state, file, pickle.HIGHEST_PROTOCOL)
 
 	def get_lowest_priority(self):
-		pass
+		return hot_starts[0]
 
 	# agent_policy is the agent's mapping from observations to actions
 	def visualize_hot_starts(self, agent_policy):
