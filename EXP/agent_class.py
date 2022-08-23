@@ -110,7 +110,7 @@ class Agent():
 		self.critic_1.optimizer.step()
 		self.critic_2.optimizer.step()
 
-		# <---- CRITIC UPDATE ---->
+		# <---- ONE STEP MODELS UPDATE ---->
 		for i in range(self.ensemble_size):
 			self.one_step_models[i].optimizer.zero_grad()
 			# minimize MSE between prediction of state and actual s'

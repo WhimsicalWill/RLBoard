@@ -2,6 +2,7 @@ import gym
 import numpy as np
 import pickle
 import os
+import heapq
 from imageio import mimsave
 
 
@@ -18,15 +19,19 @@ class HotStarts(gym.Wrapper):
 		self.state_dir = f"{save_dir}/states"
 		self.viz_dir = f"{save_dir}/viz"
 		self.max_size = max_size
-		self.hot_starts = [] # to be populated by user with starting env states
+		self.hot_starts = [] # heap containing hot starts
 		self.visualizer = Visualizer(self.env, self.viz_dir, 3)
 
-	def track_state(self, obs_):
-		if len(self.hot_starts) >= self.max_size:
-			return # TODO: prioritize by priority
+	def track_state_if_needed(self, obs_, priority, transitions):
+		if len(self.hot_starts) == max_size and priority < self.hot_starts[0]:
+			return
+		
 		sim_state = self.env.sim.get_state()
-		env_state = EnvState(sim_state, obs_)
-		self.hot_starts.append(env_state)
+		env_state = EnvState(sim_state, obs_, transitions)
+		if len(self.hot_starts) < max_size:
+			heappush(self.hot_starts, env_state)
+		else:
+			heapreplace(self.hot_starts, env_state)
 
 	def load_states(self):
 		for filename in os.listdir(self.state_dir):
