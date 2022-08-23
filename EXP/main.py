@@ -2,6 +2,7 @@ import gym
 import sys
 import getopt
 import numpy as np
+import random
 from agent_class import Agent
 from utils import plot_learning_curve, render_games
 from wrappers import HotStarts
@@ -18,10 +19,15 @@ def train(env_name):
 	steps, episodes = 0, 0
 	while steps < total_steps:
 		done = False
-		observation = env.reset()
 		score = 0
 		episodes += 1
 		agent.episode_memory.clear()
+		if len(env.hot_starts) != 0 and random.random() < 0.5:
+			print("Starting from hot start")
+			observation = env.use_hot_start() # sample hot starts uniformly for starting state
+		else:
+			print("Starting from scratch")
+			observation = env.reset()
 		while not done:
 			action = agent.choose_action(observation)
 			observation_, reward, done, info = env.step(action)
@@ -44,7 +50,7 @@ def train(env_name):
 	plot_learning_curve(scores, figure_file)
 
 if __name__ == '__main__':
-	arg_env_name = 'LunarLanderContinuous-v2'
+	arg_env_name = 'Ant-v3'
 	arg_render = False
 	arg_help = f"{sys.argv[0]} -e <env_name> | use -r to render games from saved policy"
 

@@ -1,7 +1,7 @@
 import torch
 import torch.nn.functional as F
 import numpy as np
-from utils import ReplayBuffer
+from utils import ReplayBuffer, RolloutBuffer
 from networks import ActorNetwork, CriticNetwork, ValueNetwork, OneStepModel
 
 class Agent():
@@ -57,6 +57,7 @@ class Agent():
 		return models
 
 	def learn(self, obs_):
+		# print(f"Learning update #{self.experience_memory.mem_ctr}")
 		if self.experience_memory.mem_ctr < self.batch_size:
 			return # don't learn until we can sample at least a full batch
 
@@ -121,7 +122,7 @@ class Agent():
 			# state shape: (B, D1) | action shape: (B, D2)
 			state_prediction = self.one_step_models[i](state, action)
 			one_step_loss = F.mse_loss(state_prediction, state_)
-			print(f"MODEL{i+1} Loss: {one_step_loss}")
+			# print(f"MODEL{i+1} Loss: {one_step_loss}")
 			one_step_loss.backward()
 			self.one_step_models[i].optimizer.step()
 
@@ -135,7 +136,7 @@ class Agent():
 		for i in range(past_states.shape[0]):
 			prediction_variance = self.get_one_step_predictions(past_states[i], past_actions[i])
 			total_curiosity += prediction_variance
-		env.track_state_if_needed(total_curiosity, obs_, past_states, past_actions)
+		self.env.track_state_if_needed(total_curiosity, obs_, past_states, past_actions)
 
 		# Do a soft update to target value function after each learning step
 		self.update_agent_parameters()

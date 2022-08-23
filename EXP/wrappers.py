@@ -3,8 +3,8 @@ import numpy as np
 import pickle
 import os
 import heapq
+import random
 from imageio import mimsave
-
 
 class EnvState():
 	def __init__(self, sim_state, first_obs, states, actions):
@@ -14,7 +14,7 @@ class EnvState():
 		self.actions = actions
 
 class HotStarts(gym.Wrapper):
-	def __init__(self, env, save_dir, max_size=9): # TODO: change to save_dir
+	def __init__(self, env, save_dir, max_size=9):
 		super(HotStarts, self).__init__(env)
 		self.env = env
 		self.state_dir = f"{save_dir}/states"
@@ -24,17 +24,22 @@ class HotStarts(gym.Wrapper):
 		self.visualizer = Visualizer(self.env, self.viz_dir, 3)
 
 	def track_state_if_needed(self, priority, obs_, states, actions):
-		# TODO: also check that EnvState for this (sim_state, obs_) not already added
-
-		if len(self.hot_starts) == max_size and priority < self.hot_starts[0]:
+		if len(self.hot_starts) == self.max_size and priority < self.get_lowest_priority():
 			return
-		
+		# print(f"Adding to heap | Current Size: {len(self.hot_starts)}")
 		sim_state = self.env.sim.get_state()
 		env_state = EnvState(sim_state, obs_, states, actions)
-		if len(self.hot_starts) < max_size:
-			heappush(self.hot_starts, env_state)
+		if len(self.hot_starts) < self.max_size:
+			heapq.heappush(self.hot_starts, (priority, env_state))
 		else:
-			heapreplace(self.hot_starts, env_state)
+			# print(f"Replacing lowest priority {self.get_lowest_priority()} with EnvState of priority {priority}")
+			heapq.heapreplace(self.hot_starts, (priority, env_state))
+
+	def use_hot_start(self):
+		random_env_state = random.choice(self.hot_starts)[1]
+		self.env.reset() # reset needed since step count needs to be reset
+		self.env.sim.set_state(random_env_state.sim_state)
+		return random_env_state.first_obs
 
 	def load_states(self):
 		for filename in os.listdir(self.state_dir):
@@ -49,7 +54,7 @@ class HotStarts(gym.Wrapper):
 				pickle.dump(env_state, file, pickle.HIGHEST_PROTOCOL)
 
 	def get_lowest_priority(self):
-		return hot_starts[0]
+		return None if len(self.hot_starts) == 0 else self.hot_starts[0][0]
 
 	# agent_policy is the agent's mapping from observations to actions
 	def visualize_hot_starts(self, agent_policy):
