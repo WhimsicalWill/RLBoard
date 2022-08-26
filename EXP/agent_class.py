@@ -132,14 +132,35 @@ class Agent():
 		past_states = torch.tensor(past_states, dtype=torch.float32).to(self.actor.device)
 		past_actions = torch.tensor(past_actions, dtype=torch.float32).to(self.actor.device)
 
-		total_curiosity = 0
-		for i in range(past_states.shape[0]):
-			prediction_variance = self.get_one_step_predictions(past_states[i], past_actions[i])
-			total_curiosity += prediction_variance
+		early_termination = done and self.episode_memory.num_transitions < curiosity_horizon
+		if early_termination or self.episode_memory.num_transitions == curiosity_horizon:
+			# update the curiosity value if an existing Hot Start object
+			total_curiosity = calculate_curiosity(past_states, past_actions)
+		elif self.episode_memory.num_transitions >= curiosity_horizon:
+			# pass a potential starting state to the Hot Start clasis
+
+
+
+		
+
+
+		past_states = self.episode_memory.states[-self.curiosity_horizon:]
+		past_actions = self.episode_memory.actions[-self.curiosity_horizon:]
+		past_states = torch.tensor(past_states, dtype=torch.float32).to(self.actor.device)
+		past_actions = torch.tensor(past_actions, dtype=torch.float32).to(self.actor.device)
+
+		total_curiosity = calculate_curiosity(past_states, past_actions)
 		self.env.track_state_if_needed(total_curiosity, obs_, past_states, past_actions)
 
 		# Do a soft update to target value function after each learning step
 		self.update_agent_parameters()
+
+	def calculate_curiosity(states, actions):
+		total_curiosity = 0
+		for i in range(states.shape[0]):
+			prediction_variance = self.get_one_step_predictions(past_states[i], past_actions[i])
+			total_curiosity += prediction_variance
+		return total_curiosity
 
 	def update_agent_parameters(self, tau=None):
 		if tau is None:
