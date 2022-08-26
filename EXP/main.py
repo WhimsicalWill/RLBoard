@@ -36,6 +36,8 @@ def train(env_name):
 			score += reward
 			steps += 1
 			observation = observation_
+		if episodes % 20 == 0:
+			env.visualize_hot_starts(agent.choose_action)
 		scores.append(score)
 		avg_score = np.mean(scores[-100:])
 
@@ -50,7 +52,7 @@ def train(env_name):
 	plot_learning_curve(scores, figure_file)
 
 if __name__ == '__main__':
-	arg_env_name = 'Ant-v3'
+	arg_env_name = 'HalfCheetah-v3'
 	arg_render = False
 	arg_help = f"{sys.argv[0]} -e <env_name> | use -r to render games from saved policy"
 

@@ -24,9 +24,9 @@ class Agent():
 		self.value = ValueNetwork(beta, input_dims, fc1_dims, fc2_dims, "value")
 		self.target_value = ValueNetwork(beta, input_dims, fc1_dims, fc2_dims, "target_value")
 
-		self.ensemble_size = 5
+		self.ensemble_size = 3
 		self.hidden_size = 64
-		self.curiosity_horizon = 3
+		self.curiosity_horizon = 2
 		self.one_step_models = self.get_one_step_models()
 
 		self.update_agent_parameters(tau=1) # hard update with tau=1 for initial full copying of weights

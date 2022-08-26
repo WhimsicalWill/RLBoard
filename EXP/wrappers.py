@@ -7,28 +7,26 @@ import random
 from imageio import mimsave
 
 class EnvState():
-	def __init__(self, sim_state, first_obs, states, actions):
+	def __init__(self, sim_state, first_obs):
 		self.sim_state = sim_state
 		self.first_obs = first_obs
-		self.states = states
-		self.actions = actions
 
 class HotStarts(gym.Wrapper):
-	def __init__(self, env, save_dir, max_size=9):
+	def __init__(self, env, save_dir, max_size=4):
 		super(HotStarts, self).__init__(env)
 		self.env = env
 		self.state_dir = f"{save_dir}/states"
 		self.viz_dir = f"{save_dir}/viz"
 		self.max_size = max_size
 		self.hot_starts = [] # heap containing hot starts
-		self.visualizer = Visualizer(self.env, self.viz_dir, 3)
+		self.visualizer = Visualizer(self.env, self.viz_dir, 2)
 
-	def track_state_if_needed(self, priority, obs_, states, actions):
+	def track_state_if_needed(self, priority, obs_):
 		if len(self.hot_starts) == self.max_size and priority < self.get_lowest_priority():
 			return
 		# print(f"Adding to heap | Current Size: {len(self.hot_starts)}")
 		sim_state = self.env.sim.get_state()
-		env_state = EnvState(sim_state, obs_, states, actions)
+		env_state = EnvState(sim_state, obs_)
 		if len(self.hot_starts) < self.max_size:
 			heapq.heappush(self.hot_starts, (priority, env_state))
 		else:
@@ -36,9 +34,11 @@ class HotStarts(gym.Wrapper):
 			heapq.heapreplace(self.hot_starts, (priority, env_state))
 
 	def use_hot_start(self):
-		random_env_state = random.choice(self.hot_starts)[1]
+		random_hot_start = random.choice(self.hot_starts)
+		priority, random_env_state = random_hot_start
 		self.env.reset() # reset needed since step count needs to be reset
 		self.env.sim.set_state(random_env_state.sim_state)
+		print(f"Priority of sampled hot start: {priority}")
 		return random_env_state.first_obs
 
 	def load_states(self):
@@ -61,8 +61,9 @@ class HotStarts(gym.Wrapper):
 		self.visualizer.reset_frame_collage()
 		for i, hot_start in enumerate(self.hot_starts):
 			self.env.reset() # reset needed since step count needs to be reset
-			self.env.sim.set_state(hot_start.sim_state)
-			self.visualizer.env_runner(hot_start.first_obs, agent_policy, i)
+			env_state = hot_start[1]
+			self.env.sim.set_state(env_state.sim_state)
+			self.visualizer.env_runner(env_state.first_obs, agent_policy, i)
 		self.visualizer.log_gif()
    
 class Visualizer():
