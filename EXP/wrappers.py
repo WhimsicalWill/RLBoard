@@ -7,8 +7,9 @@ import random
 from imageio import mimsave
 
 class EnvState():
-	def __init__(self, sim_state, first_obs):
+	def __init__(self, sim_state, starting_state, first_obs):
 		self.sim_state = sim_state
+		self.starting_state = starting_state
 		self.first_obs = first_obs
 
 class HotStarts(gym.Wrapper):
@@ -19,19 +20,31 @@ class HotStarts(gym.Wrapper):
 		self.viz_dir = f"{save_dir}/viz"
 		self.max_size = max_size
 		self.hot_starts = [] # heap containing hot starts
+		self.states_dict = {}
 		self.visualizer = Visualizer(self.env, self.viz_dir, 2)
+		self.entry_count = 0 # a tie breaker for the heap tuples
 
-	def track_state_if_needed(self, priority, obs_):
+	def track_state_if_needed(self, priority, obs_, starting_state):
+		# Update priority of an existing Hot Start
+		if starting_state in states_dict:
+			hot_start = self.states_dict[starting_state]
+			idx_to_update = hot_starts.index(hot_start) # O(n) time complexity, but other solutions are complicated
+			hot_starts[idx_to_update] = (priority, hot_start[1], hot_start[2])
+			heapq.heapify(hot_starts)
+			return
 		if len(self.hot_starts) == self.max_size and priority < self.get_lowest_priority():
 			return
-		# print(f"Adding to heap | Current Size: {len(self.hot_starts)}")
-		sim_state = self.env.sim.get_state()
-		env_state = EnvState(sim_state, obs_)
+		sim_state = self.env.sim.get_state(i)
+		env_state = EnvState(sim_state, starting_state, obs_)
+		hot_start = (priority, self.entry_count, env_state)
+		states_dict[starting_state] = hot_start
 		if len(self.hot_starts) < self.max_size:
-			heapq.heappush(self.hot_starts, (priority, env_state))
+			heapq.heappush(self.hot_starts, hot_start)
 		else:
-			# print(f"Replacing lowest priority {self.get_lowest_priority()} with EnvState of priority {priority}")
-			heapq.heapreplace(self.hot_starts, (priority, env_state))
+			popped_hot_start = heapq.heapreplace(self.hot_starts, hot_start) 
+			starting_state_to_remove = popped_hot_start[2].starting_state
+			self.states_dict.pop(starting_state_to_remove) # pop removed state from dict
+		self.entry_count += 1
 
 	def use_hot_start(self):
 		random_hot_start = random.choice(self.hot_starts)

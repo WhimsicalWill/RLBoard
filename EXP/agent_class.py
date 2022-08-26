@@ -131,26 +131,9 @@ class Agent():
 		past_actions = self.episode_memory.actions[-self.curiosity_horizon:]
 		past_states = torch.tensor(past_states, dtype=torch.float32).to(self.actor.device)
 		past_actions = torch.tensor(past_actions, dtype=torch.float32).to(self.actor.device)
-
-		early_termination = done and self.episode_memory.num_transitions < curiosity_horizon
-		if early_termination or self.episode_memory.num_transitions == curiosity_horizon:
-			# update the curiosity value if an existing Hot Start object
-			total_curiosity = calculate_curiosity(past_states, past_actions)
-		elif self.episode_memory.num_transitions >= curiosity_horizon:
-			# pass a potential starting state to the Hot Start clasis
-
-
-
-		
-
-
-		past_states = self.episode_memory.states[-self.curiosity_horizon:]
-		past_actions = self.episode_memory.actions[-self.curiosity_horizon:]
-		past_states = torch.tensor(past_states, dtype=torch.float32).to(self.actor.device)
-		past_actions = torch.tensor(past_actions, dtype=torch.float32).to(self.actor.device)
-
 		total_curiosity = calculate_curiosity(past_states, past_actions)
-		self.env.track_state_if_needed(total_curiosity, obs_, past_states, past_actions)
+		starting_state = past_states[max(len(past_states) - curiosity_horizon, 0)]
+		self.env.track_state_if_needed(total_curiosity, obs_, starting_state)
 
 		# Do a soft update to target value function after each learning step
 		self.update_agent_parameters()
