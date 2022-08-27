@@ -36,7 +36,7 @@ def train(env_name):
 			score += reward
 			steps += 1
 			observation = observation_
-		if episodes % 20 == 0:
+		if episodes % 5 == 0:
 			env.visualize_hot_starts(agent.choose_action)
 		scores.append(score)
 		avg_score = np.mean(scores[-100:])

@@ -25,22 +25,27 @@ class HotStarts(gym.Wrapper):
 		self.entry_count = 0 # a tie breaker for the heap tuples
 
 	def track_state_if_needed(self, priority, obs_, starting_state):
+		print(f"Track state if needed | Lowest p: {self.get_lowest_priority()}")
 		# Update priority of an existing Hot Start
-		if starting_state in states_dict:
+		if starting_state in self.states_dict:
 			hot_start = self.states_dict[starting_state]
 			idx_to_update = hot_starts.index(hot_start) # O(n) time complexity, but other solutions are complicated
 			hot_starts[idx_to_update] = (priority, hot_start[1], hot_start[2])
 			heapq.heapify(hot_starts)
+			print(f"Updated existing env state from p1: {hot_start[0]} to p2: {priority}")
+			print(5 / 0)
 			return
 		if len(self.hot_starts) == self.max_size and priority < self.get_lowest_priority():
 			return
-		sim_state = self.env.sim.get_state(i)
+		sim_state = self.env.sim.get_state()
 		env_state = EnvState(sim_state, starting_state, obs_)
 		hot_start = (priority, self.entry_count, env_state)
-		states_dict[starting_state] = hot_start
+		self.states_dict[starting_state] = hot_start
 		if len(self.hot_starts) < self.max_size:
+			print("Added to unfull heap")
 			heapq.heappush(self.hot_starts, hot_start)
 		else:
+			print(f"Replace existing hot start with new one, p: {priority}")
 			popped_hot_start = heapq.heapreplace(self.hot_starts, hot_start) 
 			starting_state_to_remove = popped_hot_start[2].starting_state
 			self.states_dict.pop(starting_state_to_remove) # pop removed state from dict
@@ -48,7 +53,7 @@ class HotStarts(gym.Wrapper):
 
 	def use_hot_start(self):
 		random_hot_start = random.choice(self.hot_starts)
-		priority, random_env_state = random_hot_start
+		priority, _, random_env_state = random_hot_start
 		self.env.reset() # reset needed since step count needs to be reset
 		self.env.sim.set_state(random_env_state.sim_state)
 		print(f"Priority of sampled hot start: {priority}")
@@ -74,7 +79,8 @@ class HotStarts(gym.Wrapper):
 		self.visualizer.reset_frame_collage()
 		for i, hot_start in enumerate(self.hot_starts):
 			self.env.reset() # reset needed since step count needs to be reset
-			env_state = hot_start[1]
+			env_state = hot_start[2]
+			print(f"Adding hot_start #{hot_start[1]} p: {hot_start[0]} to collage")
 			self.env.sim.set_state(env_state.sim_state)
 			self.visualizer.env_runner(env_state.first_obs, agent_policy, i)
 		self.visualizer.log_gif()

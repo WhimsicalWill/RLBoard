@@ -12,5 +12,3 @@ Currently, visualizations are made by creating gif collages of NxN different rec
 
 - Include overlay on collage for checkpoint number for each cell
 - Make sure all models and tensors on gpu (make faster)
-- Reevaluate past hot_starts to recalculate their priorities
-- Track the first n transitions from the starting state
