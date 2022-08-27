@@ -132,7 +132,8 @@ class Agent():
 			past_states = torch.tensor(past_states, dtype=torch.float32).to(self.actor.device)
 			past_actions = torch.tensor(past_actions, dtype=torch.float32).to(self.actor.device)
 			total_curiosity = self.calculate_curiosity(past_states, past_actions)
-			starting_state = past_states[-self.curiosity_horizon]
+
+			starting_state = self.episode_memory.states[-self.curiosity_horizon]
 			sim_state = self.episode_memory.sim_states[-self.curiosity_horizon]
 			self.env.track_state_if_needed(total_curiosity, starting_state, sim_state)
 

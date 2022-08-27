@@ -26,6 +26,7 @@ def train(env_name):
 		if env.contains_hot_starts() and random.random() < 0.5:
 			print("Starting from hot start")
 			observation = env.use_hot_start() # sample hot starts uniformly for starting state
+			print(f"MAIN: {observation[:2]}")
 		else:
 			print("Starting from scratch")
 			observation = env.reset()

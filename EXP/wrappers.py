@@ -25,32 +25,33 @@ class HotStarts(gym.Wrapper):
 
 	def track_state_if_needed(self, priority, starting_state, sim_state):
 		# Update priority of an existing Hot Start
-		if starting_state in self.states_dict:
+		if tuple(starting_state) in self.states_dict:
 			# TODO: debug to make sure hot starts are updated
-			hot_start = self.states_dict[starting_state]
-			idx_to_update = hot_starts.index(hot_start) # O(n) time complexity, but other solutions are complicated
-			hot_starts[idx_to_update] = (priority, hot_start[1], hot_start[2])
-			heapq.heapify(hot_starts)
-			print(5 / 0)
+			hot_start = self.states_dict[tuple(starting_state)]
+			idx_to_update = self.hot_starts.index(hot_start) # O(n) time complexity, but other solutions are complicated
+			self.hot_starts[idx_to_update] = (priority, hot_start[1], hot_start[2])
+			heapq.heapify(self.hot_starts)
+			print("<--- Updated hot start --->")
+			self.print_hot_starts()
 			return
 		if len(self.hot_starts) == self.max_size and priority < self.get_lowest_priority():
 			return
 		# sim_state = self.env.sim.get_state()
 		env_state = EnvState(sim_state, starting_state)
 		hot_start = (priority, self.entry_count, env_state)
-		self.states_dict[starting_state] = hot_start
+		self.states_dict[tuple(starting_state)] = hot_start
 		if len(self.hot_starts) < self.max_size:
 			heapq.heappush(self.hot_starts, hot_start)
 		else:
-			# self.print_hot_starts()
+			print("<--- Replaced hot start --->")
+			self.print_hot_starts()
 			popped_hot_start = heapq.heapreplace(self.hot_starts, hot_start) 
 			starting_state_to_remove = popped_hot_start[2].starting_state
-			self.states_dict.pop(starting_state_to_remove) # pop removed state from dict
+			self.states_dict.pop(tuple(starting_state_to_remove)) # pop removed state from dict
 		self.entry_count += 1
 
 	def print_hot_starts(self):
-		print("Printing 4 Hot start initial states")
-		print([hs[2].starting_state[:2] for hs in self.hot_starts])
+		print(f"Priorities: {[hs[0].item() for hs in self.hot_starts]}")
 
 	def get_sim_state(self):
 		return self.env.sim.get_state()
