@@ -59,10 +59,12 @@ class RolloutBuffer:
 	def clear(self):
 		self.states = []
 		self.actions = []
+		self.sim_states = []
 
-	def store_transition(self, state, action):
+	def store_transition(self, state, action, sim_state):
 		self.states.append(state)
 		self.actions.append(action)
+		self.sim_states.append(sim_state)
 
 def render_games(env_name):
 	env = gym.make(env_name)

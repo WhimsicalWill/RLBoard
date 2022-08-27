@@ -9,10 +9,11 @@ from wrappers import HotStarts
 
 def train(env_name):
 	save_dir = 'data'
+	curiosity_horizon = 1
 	env = gym.make(env_name)
-	env = HotStarts(env, save_dir)
-	agent = Agent(alpha=0.0003, beta=0.0003, input_dims=env.observation_space.shape,
-					tau=0.005, env=env, action_dim=env.action_space.shape[0]) 
+	env = HotStarts(env, save_dir, curiosity_horizon)
+	agent = Agent(0.0003, 0.0003, env.observation_space.shape,
+					0.005, env, env.action_space.shape[0], curiosity_horizon) 
 	total_steps = 3e5
 	best_score = env.reward_range[0] # init to smallest possible reward
 	scores = []
@@ -22,17 +23,19 @@ def train(env_name):
 		score = 0
 		episodes += 1
 		agent.episode_memory.clear()
-		if len(env.hot_starts) != 0 and random.random() < 0.5:
+		if env.contains_hot_starts() and random.random() < 0.5:
 			print("Starting from hot start")
 			observation = env.use_hot_start() # sample hot starts uniformly for starting state
 		else:
 			print("Starting from scratch")
 			observation = env.reset()
 		while not done:
+			sim_state = env.get_sim_state()
 			action = agent.choose_action(observation)
 			observation_, reward, done, info = env.step(action)
-			agent.store_transition(observation, action, reward, observation_, done)
-			agent.learn(observation_)
+			agent.store_transition(observation, action, reward, observation_, done, sim_state)
+			# agent.learn(observation_)
+			agent.learn()
 			score += reward
 			steps += 1
 			observation = observation_

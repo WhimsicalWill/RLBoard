@@ -6,8 +6,8 @@ from networks import ActorNetwork, CriticNetwork, ValueNetwork, OneStepModel
 
 class Agent():
 	def __init__(self, alpha, beta, input_dims, tau, env, action_dim,
-					gamma=0.99, max_size=1000000, fc1_dims=256,
-					 fc2_dims=256,  batch_size=100, reward_scale=2):
+					curiosity_horizon=2, gamma=0.99, max_size=1000000, 
+					fc1_dims=256, fc2_dims=256,  batch_size=100, reward_scale=2):
 		self.gamma = gamma
 		self.tau = tau
 		self.batch_size = batch_size
@@ -15,6 +15,7 @@ class Agent():
 		self.action_dim = action_dim
 		self.env = env
 		self.scale = reward_scale
+		self.curiosity_horizon = curiosity_horizon
 		self.experience_memory = ReplayBuffer(max_size, input_dims, action_dim)
 		self.episode_memory = RolloutBuffer()
 		
@@ -26,14 +27,13 @@ class Agent():
 
 		self.ensemble_size = 3
 		self.hidden_size = 64
-		self.curiosity_horizon = 2
 		self.one_step_models = self.get_one_step_models()
 
 		self.update_agent_parameters(tau=1) # hard update with tau=1 for initial full copying of weights
 
-	def store_transition(self, state, action, reward, state_, done):
+	def store_transition(self, state, action, reward, state_, done, sim_state):
 		self.experience_memory.store_transition(state, action, reward, state_, done)
-		self.episode_memory.store_transition(state, action)
+		self.episode_memory.store_transition(state, action, sim_state)
 
 	def choose_action(self, observation):
 		state = torch.tensor([observation], dtype=torch.float).to(self.actor.device)
@@ -56,7 +56,7 @@ class Agent():
 			models.append(OneStepModel(self.input_dims, self.action_dim, self.hidden_size, f"one_step{i+1}"))
 		return models
 
-	def learn(self, obs_):
+	def learn(self):
 		# print(f"Learning update #{self.experience_memory.mem_ctr}")
 		if self.experience_memory.mem_ctr < self.batch_size:
 			return # don't learn until we can sample at least a full batch
@@ -126,13 +126,15 @@ class Agent():
 			self.one_step_models[i].optimizer.step()
 
 		# <---- STARTING DIST UPDATE ---->
-		past_states = self.episode_memory.states[-self.curiosity_horizon:]
-		past_actions = self.episode_memory.actions[-self.curiosity_horizon:]
-		past_states = torch.tensor(past_states, dtype=torch.float32).to(self.actor.device)
-		past_actions = torch.tensor(past_actions, dtype=torch.float32).to(self.actor.device)
-		total_curiosity = self.calculate_curiosity(past_states, past_actions)
-		starting_state = past_states[max(len(past_states) - self.curiosity_horizon, 0)]
-		self.env.track_state_if_needed(total_curiosity, obs_, starting_state)
+		if len(self.episode_memory.states) >= self.curiosity_horizon:
+			past_states = self.episode_memory.states[-self.curiosity_horizon:]
+			past_actions = self.episode_memory.actions[-self.curiosity_horizon:]
+			past_states = torch.tensor(past_states, dtype=torch.float32).to(self.actor.device)
+			past_actions = torch.tensor(past_actions, dtype=torch.float32).to(self.actor.device)
+			total_curiosity = self.calculate_curiosity(past_states, past_actions)
+			starting_state = past_states[-self.curiosity_horizon]
+			sim_state = self.episode_memory.sim_states[-self.curiosity_horizon]
+			self.env.track_state_if_needed(total_curiosity, starting_state, sim_state)
 
 		# Do a soft update to target value function after each learning step
 		self.update_agent_parameters()

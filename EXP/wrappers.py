@@ -7,13 +7,12 @@ import random
 from imageio import mimsave
 
 class EnvState():
-	def __init__(self, sim_state, starting_state, first_obs):
+	def __init__(self, sim_state, starting_state):
 		self.sim_state = sim_state
 		self.starting_state = starting_state
-		self.first_obs = first_obs
 
 class HotStarts(gym.Wrapper):
-	def __init__(self, env, save_dir, max_size=4):
+	def __init__(self, env, save_dir, curiosity_horizon, max_size=4):
 		super(HotStarts, self).__init__(env)
 		self.env = env
 		self.state_dir = f"{save_dir}/states"
@@ -24,32 +23,37 @@ class HotStarts(gym.Wrapper):
 		self.visualizer = Visualizer(self.env, self.viz_dir, 2)
 		self.entry_count = 0 # a tie breaker for the heap tuples
 
-	def track_state_if_needed(self, priority, obs_, starting_state):
-		print(f"Track state if needed | Lowest p: {self.get_lowest_priority()}")
+	def track_state_if_needed(self, priority, starting_state, sim_state):
 		# Update priority of an existing Hot Start
 		if starting_state in self.states_dict:
+			# TODO: debug to make sure hot starts are updated
 			hot_start = self.states_dict[starting_state]
 			idx_to_update = hot_starts.index(hot_start) # O(n) time complexity, but other solutions are complicated
 			hot_starts[idx_to_update] = (priority, hot_start[1], hot_start[2])
 			heapq.heapify(hot_starts)
-			print(f"Updated existing env state from p1: {hot_start[0]} to p2: {priority}")
 			print(5 / 0)
 			return
 		if len(self.hot_starts) == self.max_size and priority < self.get_lowest_priority():
 			return
-		sim_state = self.env.sim.get_state()
-		env_state = EnvState(sim_state, starting_state, obs_)
+		# sim_state = self.env.sim.get_state()
+		env_state = EnvState(sim_state, starting_state)
 		hot_start = (priority, self.entry_count, env_state)
 		self.states_dict[starting_state] = hot_start
 		if len(self.hot_starts) < self.max_size:
-			print("Added to unfull heap")
 			heapq.heappush(self.hot_starts, hot_start)
 		else:
-			print(f"Replace existing hot start with new one, p: {priority}")
+			# self.print_hot_starts()
 			popped_hot_start = heapq.heapreplace(self.hot_starts, hot_start) 
 			starting_state_to_remove = popped_hot_start[2].starting_state
 			self.states_dict.pop(starting_state_to_remove) # pop removed state from dict
 		self.entry_count += 1
+
+	def print_hot_starts(self):
+		print("Printing 4 Hot start initial states")
+		print([hs[2].starting_state[:2] for hs in self.hot_starts])
+
+	def get_sim_state(self):
+		return self.env.sim.get_state()
 
 	def use_hot_start(self):
 		random_hot_start = random.choice(self.hot_starts)
@@ -57,7 +61,7 @@ class HotStarts(gym.Wrapper):
 		self.env.reset() # reset needed since step count needs to be reset
 		self.env.sim.set_state(random_env_state.sim_state)
 		print(f"Priority of sampled hot start: {priority}")
-		return random_env_state.first_obs
+		return random_env_state.starting_state
 
 	def load_states(self):
 		for filename in os.listdir(self.state_dir):
@@ -72,7 +76,10 @@ class HotStarts(gym.Wrapper):
 				pickle.dump(env_state, file, pickle.HIGHEST_PROTOCOL)
 
 	def get_lowest_priority(self):
-		return None if len(self.hot_starts) == 0 else self.hot_starts[0][0]
+		return self.hot_starts[0][0] if self.contains_hot_starts else None
+
+	def contains_hot_starts(self):
+		return len(self.hot_starts) > 0
 
 	# agent_policy is the agent's mapping from observations to actions
 	def visualize_hot_starts(self, agent_policy):
@@ -82,7 +89,7 @@ class HotStarts(gym.Wrapper):
 			env_state = hot_start[2]
 			print(f"Adding hot_start #{hot_start[1]} p: {hot_start[0]} to collage")
 			self.env.sim.set_state(env_state.sim_state)
-			self.visualizer.env_runner(env_state.first_obs, agent_policy, i)
+			self.visualizer.env_runner(env_state.starting_state, agent_policy, i)
 		self.visualizer.log_gif()
    
 class Visualizer():
@@ -105,8 +112,8 @@ class Visualizer():
 	def reset_frame_collage(self):
 		self.frame_collage = np.zeros((self.max_steps, self.grid_px_width, self.grid_px_width, self.num_color_channels))
 
-	def env_runner(self, first_obs, agent_policy, hot_start_num):
-		obs = first_obs
+	def env_runner(self, starting_state, agent_policy, hot_start_num):
+		obs = starting_state
 		done = False
 		score, step = 0, 0
 		frames = []
