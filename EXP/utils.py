@@ -96,7 +96,7 @@ def render_games_mujoco(env_name):
 					tau=0.005, env=env, action_dim=env.action_space.shape[0]) 
 	n_games = 10
 	render_px = 256
-	viz_dir = "/data/viz"
+	viz_dir = "data/viz"
 
 	# Load saved model
 	agent.load_models()
@@ -105,11 +105,11 @@ def render_games_mujoco(env_name):
 	done = False
 	score, step = 0, 0
 	frames = []
-	for i in range(num_games):
+	for i in range(n_games):
 		while not done:
 			action = agent.choose_action(obs) # this call may vary by implementation
-			obs_, reward, done, info = self.env.step(action)
-			render_img = self.env.render(
+			obs_, reward, done, info = env.step(action)
+			render_img = env.render(
 				mode="rgb_array",
 				width=render_px,
 				height=render_px,
@@ -124,4 +124,4 @@ def render_games_mujoco(env_name):
 def save_vid(frames, ep, viz_dir):
 	print(f"Saving gif {ep} to {viz_dir}")
 	filename = f"{viz_dir}/render_policy_{ep+1}.gif"
-	mimsave(filename, frames)
+	mimsave(filename, frames, fps=60)

@@ -4,7 +4,7 @@ import getopt
 import numpy as np
 import random
 from agent_class import Agent
-from utils import plot_learning_curve, render_games
+from utils import plot_learning_curve, render_games, render_games_mujoco
 from wrappers import HotStarts
 
 def train(env_name):
@@ -76,6 +76,6 @@ if __name__ == '__main__':
 			arg_render = True
 	
 	if arg_render:
-		render_games(arg_env_name)
+		render_games_mujoco(arg_env_name)
 	else:
 		train(arg_env_name)
