@@ -9,7 +9,7 @@ from wrappers import HotStarts
 
 def train(env_name):
 	save_dir = 'data'
-	curiosity_horizon = 1
+	curiosity_horizon = 3
 	env = gym.make(env_name)
 	env = HotStarts(env, save_dir, curiosity_horizon)
 	agent = Agent(0.0003, 0.0003, env.observation_space.shape,
@@ -56,7 +56,7 @@ def train(env_name):
 	plot_learning_curve(scores, figure_file)
 
 if __name__ == '__main__':
-	arg_env_name = 'HalfCheetah-v3'
+	arg_env_name = 'Hopper-v2'
 	arg_render = False
 	arg_help = f"{sys.argv[0]} -e <env_name> | use -r to render games from saved policy"
 

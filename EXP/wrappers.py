@@ -26,10 +26,11 @@ class HotStarts(gym.Wrapper):
 	def track_state_if_needed(self, priority, starting_state, sim_state):
 		# Update priority of an existing Hot Start
 		if tuple(starting_state) in self.states_dict:
-			# TODO: debug to make sure hot starts are updated
 			hot_start = self.states_dict[tuple(starting_state)]
+			new_hot_start = (priority, hot_start[1], hot_start[2])
 			idx_to_update = self.hot_starts.index(hot_start) # O(n) time complexity, but other solutions are complicated
-			self.hot_starts[idx_to_update] = (priority, hot_start[1], hot_start[2])
+			self.hot_starts[idx_to_update] = new_hot_start
+			self.states_dict[tuple(starting_state)] = new_hot_start
 			heapq.heapify(self.hot_starts)
 			print("<--- Updated hot start --->")
 			self.print_hot_starts()
@@ -95,7 +96,7 @@ class HotStarts(gym.Wrapper):
    
 class Visualizer():
 	# TODO: put config details in config.json for easy user editing
-	def __init__(self, env, viz_dir, grid_block_width, max_steps=500, px=128, border_thickness=5):
+	def __init__(self, env, viz_dir, grid_block_width, max_steps=500, px=320, border_thickness=5):
 		self.env = env
 		self.viz_dir = viz_dir
 		self.grid_block_width = grid_block_width
@@ -109,6 +110,7 @@ class Visualizer():
 		self.grid_px_width = grid_block_width * px + self.size_offset
 		
 		self.frame_collage = np.zeros((max_steps, self.grid_px_width, self.grid_px_width, self.num_color_channels))
+		self.collage_num = 1
 
 	def reset_frame_collage(self):
 		self.frame_collage = np.zeros((self.max_steps, self.grid_px_width, self.grid_px_width, self.num_color_channels))
@@ -132,7 +134,6 @@ class Visualizer():
 			step += 1
 			obs = obs_
 		print(f"Checkpoint {hot_start_num}, score: {score}, step: {step}")
-		self.save_vid(frames, hot_start_num)
 	
 	def save_vid(self, frames, hot_start_num):
 		print(f"Saving gif {hot_start_num} to {self.viz_dir}")
@@ -148,7 +149,8 @@ class Visualizer():
 
 	def log_gif(self):
 		print(f"Saving gif collage to {self.viz_dir}")
-		filename = f"{self.viz_dir}/hot_start_collage.gif"
+		filename = f"{self.viz_dir}/hot_start_collage_{self.collage_num}.gif"
+		self.collage_num += 1
 		mimsave(filename, self.frame_collage.astype(np.uint8))
 
 # TODO2:

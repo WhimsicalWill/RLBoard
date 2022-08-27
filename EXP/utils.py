@@ -3,6 +3,7 @@ import gym
 import time
 import matplotlib.pyplot as plt
 import agent_class
+from imageio import mimsave
 
 def plot_learning_curve(scores, figure_file):
 	x = [i+1 for i in range(len(scores))]
@@ -88,3 +89,39 @@ def render_games(env_name):
 			observation = observation_
 		print(f"Episode {i}, score: {score}")
 	env.close()
+
+def render_games_mujoco(env_name):
+	env = gym.make(env_name)
+	agent = agent_class.Agent(alpha=0.0003, beta=0.0003, input_dims=env.observation_space.shape,
+					tau=0.005, env=env, action_dim=env.action_space.shape[0]) 
+	n_games = 10
+	render_px = 256
+	viz_dir = "/data/viz"
+
+	# Load saved model
+	agent.load_models()
+
+	obs = env.reset()
+	done = False
+	score, step = 0, 0
+	frames = []
+	for i in range(num_games):
+		while not done:
+			action = agent.choose_action(obs) # this call may vary by implementation
+			obs_, reward, done, info = self.env.step(action)
+			render_img = self.env.render(
+				mode="rgb_array",
+				width=render_px,
+				height=render_px,
+			)
+			frames.append(render_img)
+			score += reward
+			step += 1
+			obs = obs_
+		print(f"Episode {i+1}, score: {score}, step: {step}")
+		save_vid(frames, i, viz_dir)
+	
+def save_vid(frames, ep, viz_dir):
+	print(f"Saving gif {ep} to {viz_dir}")
+	filename = f"{viz_dir}/render_policy_{ep+1}.gif"
+	mimsave(filename, frames)
