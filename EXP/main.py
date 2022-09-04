@@ -56,7 +56,7 @@ def train(env_name):
 	plot_learning_curve(scores, figure_file)
 
 if __name__ == '__main__':
-	arg_env_name = 'Hopper-v2'
+	arg_env_name = 'HalfCheetah-v3'
 	arg_render = False
 	arg_help = f"{sys.argv[0]} -e <env_name> | use -r to render games from saved policy"
 
