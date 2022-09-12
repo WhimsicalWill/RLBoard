@@ -14,6 +14,7 @@ from cfg import parse_cfg
 from env import make_env
 from algorithm.tdmpc import TDMPC
 from algorithm.helper import Episode, ReplayBuffer
+from wrappers import HotStarts
 import logger
 torch.backends.cudnn.benchmark = True
 __CONFIG__, __LOGS__ = 'cfgs', 'logs'
@@ -42,6 +43,23 @@ def evaluate(env, agent, num_episodes, step, env_step, video):
 		if video: video.save(env_step)
 	return np.nanmean(episode_rewards)
 
+def collect_random_hot_starts(env):
+	observation, done, score, steps = env.reset(), False, 0, 0
+	while not done:
+		action = env.action_space.sample()
+		observation_, reward, done, info = env.step(action)
+		if random.random() < 0.05:
+			env.track_state_if_needed(0, observation_, env.physics.get_state())
+
+	env.save_states()
+
+def get_starting_state(env):
+	if random.random() < 0.5:
+		# normal start
+		pass
+	else:
+		# sample from hot starts buffer
+		pass
 
 def train(cfg):
 	"""Training script for TD-MPC. Requires a CUDA-enabled device."""
@@ -49,6 +67,9 @@ def train(cfg):
 	set_seed(cfg.seed)
 	work_dir = Path().cwd() / __LOGS__ / cfg.task / cfg.modality / cfg.exp_name / str(cfg.seed)
 	env, agent, buffer = make_env(cfg), TDMPC(cfg), ReplayBuffer(cfg)
+	env = HotStarts(env, 'data', 5)
+	collect_random_hot_starts(env)
+	print("Collected Hot Starts")
 	
 	# Run training
 	L = logger.Logger(work_dir, cfg)
@@ -56,10 +77,14 @@ def train(cfg):
 	for step in range(0, cfg.train_steps+cfg.episode_length, cfg.episode_length):
 
 		# Collect trajectory
-		obs = env.reset()
+		# TODO: sample hot start from environment with p 0.5
+		obs = get_starting_state(env)
+		# obs = env.reset()
 		episode = Episode(cfg, obs)
 		while not episode.done:
 			action = agent.plan(obs, step=step, t0=episode.first)
+			# TODO: calculate model disagreement and call track
+			disagreement = agent.get_disagreement(obs, action)
 			obs, reward, done, _ = env.step(action.cpu().numpy())
 			episode += (obs, action, reward, done)
 		assert len(episode) == cfg.episode_length

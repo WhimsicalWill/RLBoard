@@ -37,7 +37,6 @@ class HotStarts(gym.Wrapper):
 			return
 		if len(self.hot_starts) == self.max_size and priority < self.get_lowest_priority():
 			return
-		# sim_state = self.env.sim.get_state()
 		env_state = EnvState(sim_state, starting_state)
 		hot_start = (priority, self.entry_count, env_state)
 		self.states_dict[tuple(starting_state)] = hot_start

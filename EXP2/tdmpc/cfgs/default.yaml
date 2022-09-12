@@ -40,14 +40,14 @@ mlp_dim: 512
 latent_dim: 50
 
 # wandb (insert your own)
-use_wandb: false
-wandb_project: none
-wandb_entity: none
+use_wandb: true
+wandb_project: tdmpc-RLBoard
+wandb_entity: whimsicalwill
 
 # misc
 seed: 1
-exp_name: default
+exp_name: viz_test1
 eval_freq: 20000
 eval_episodes: 10
-save_video: false
-save_model: false
+save_video: true
+save_model: true
