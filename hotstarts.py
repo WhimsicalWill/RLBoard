@@ -2,6 +2,7 @@ import gym
 import numpy as np
 import pickle
 import os
+import math
 from imageio import mimsave
 
 class EnvState():
@@ -17,7 +18,12 @@ class HotStarts(gym.Wrapper):
 		self.viz_dir = f"{save_dir}/viz"
 		self.max_size = max_size
 		self.hot_starts = []
-		self.visualizer = Visualizer(self.env, self.viz_dir, 3)
+
+		# check that max_size is a perfect square
+		side_length = int(math.sqrt(max_size))
+		assert(side_length ** 2 == max_size)
+
+		self.visualizer = Visualizer(self.env, self.viz_dir, side_length)
 
 	def track_state(self, obs_):
 		if len(self.hot_starts) >= self.max_size:
