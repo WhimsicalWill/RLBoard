@@ -1,10 +1,1 @@
-__pycache__
-data
-wandb
-/**/tmp/*
-/**/plots/*
-EXP/tmp/exp/actor_exp
-EXP/tmp/exp/critic_1_exp
-EXP/tmp/exp/critic_2_exp
-EXP/tmp/exp/target_value_exp
-EXP/tmp/exp/value_exp
+__pycache__/
