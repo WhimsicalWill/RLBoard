@@ -23,10 +23,10 @@ The easiest way to get started is to create a virtual environment and install th
 # Usage
 
 ```bash
-	env.track_state(observation)
-	env.save_states()
-	env.load_states()
-	env.visualize_hot_starts(policy)
+  env.track_state(observation)
+  env.save_states()
+  env.load_states()
+  env.visualize_hot_starts(policy)
 ```
 
 Contained in `hotstarts.py` is a wrapper for gym environments that allows for tracking of states. These states are stored in memory while the program is running, but can be saved/loaded with `env.save_states()` and `env.load_states()`.
@@ -36,9 +36,9 @@ To visualize an agent's performance from the collection of hot starts, call the 
 For example, to visualize a random agent:
 
 ```bash
-	env.visualize_hot_starts(lambda obs: env.action_space.sample())
+  env.visualize_hot_starts(lambda obs: env.action_space.sample())
 ```
 
 # Starter code
 
-Before visualizing hot starts, they must be collected. `visualize_agent.py` provides an example snippet that collects a random set of hot starts and visualizes the performance of a trained RL agent starting from each hot start.
+Before visualizing hot starts, they must be collected from the environment. `visualize_agent.py` provides some starter code that collects a random set of hot starts and visualizes the performance of a trained RL agent starting from each hot start.
