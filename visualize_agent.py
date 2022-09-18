@@ -32,5 +32,8 @@ if __name__ == '__main__':
 
 	print(f"Successfully loaded models")
 
-	# create gif of agent performing starting from each hot start
+	# create gif of trained agent performing starting from each hot start
 	env.visualize_hot_starts(agent.choose_action)
+
+	# create gif of random agent performing starting from each hot start
+	# env.visualize_hot_starts(lambda obs: env.action_space.sample())
