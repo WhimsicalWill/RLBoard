@@ -1,11 +1,8 @@
-import gym
 import random
-import numpy as np
-from hotstarts import HotStarts
 
 def collect_random_hot_starts(env, amount):
 	step, max_steps = 0, 100
-	steps_to_save = set(random.sample(range(100), amount))
+	steps_to_save = set(random.sample(range(max_steps), amount))
 	
 	while step < max_steps:
 		env.reset()
@@ -20,25 +17,3 @@ def collect_random_hot_starts(env, amount):
 					env.save_states() # save the hot starts to disk
 					return
 			step += 1
-
-
-# # viz_hot_starts_random
-
-# import gym
-# import numpy as np
-# from wrappers import HotStarts
-
-# if __name__ == '__main__':
-# 	env_name = 'HalfCheetah-v3'
-# 	save_dir = 'data'
-# 	env = gym.make(env_name)
-# 	env = HotStarts(env, save_dir)
-
-# 	# random mapping from obs -> actions
-# 	def random_action(observation):
-# 		return env.action_space.sample()
-		
-
-# 	# load the hot starts from disk
-# 	env.load_states()
-# 	env.visualize_hot_starts(random_action)
